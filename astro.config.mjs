@@ -3,7 +3,7 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  site: "https://joaquincaldera.pages.dev",
+  site: "https://joaquincaldera.jcaldera2001.workers.dev",
   vite: {
     plugins: [tailwindcss()],
   },
