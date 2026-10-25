@@ -4,8 +4,7 @@ export const SITE = {
   tagline: "Sitios web para comercios de Toay y Santa Rosa",
   city: "Toay, La Pampa",
   // Número en formato internacional sin "+" ni espacios: 54 9 + característica + número.
-  // TODO: reemplazar por el número real de Joaquín.
-  whatsapp: "5492954000000",
+  whatsapp: "5491159447208",
   instagram: "",
   email: "",
 };
