@@ -1,0 +1,141 @@
+---
+// Reserva de turnos: servicio, profesional, día y hora, confirmados por WhatsApp.
+// En un cliente real, los turnos ocupados salen de Supabase y la seña se cobra con Mercado Pago.
+// Los colores salen de las variables --accent, --accent-dark y --soft del contenedor.
+import { SITE } from "../config";
+
+interface Props {
+  servicios: { id: string; nombre: string; duracion: number; precio: number }[];
+  profesionales?: string[];
+  horarios: string[];
+  diasCerrados?: number[]; // 0 = domingo
+  negocio: string;
+  prefijo: string;
+  telefono?: string;
+}
+
+const {
+  servicios,
+  profesionales = [],
+  horarios,
+  diasCerrados = [0],
+  negocio,
+  prefijo,
+  telefono = SITE.whatsapp,
+} = Astro.props;
+const fmt = (n: number) => n.toLocaleString("es-AR");
+---
+
+<form id="form-turno" class="space-y-6">
+  <div>
+    <p class="text-sm font-semibold">1. ¿Qué te hacés?</p>
+    <select name="servicio" required class="mt-2 w-full rounded-xl border border-black/20 bg-white px-3 py-2">
+      {servicios.map((s) => <option value={s.id}>{s.nombre} · ${fmt(s.precio)}</option>)}
+    </select>
+  </div>
+  {profesionales.length > 0 && (
+    <div>
+      <p class="text-sm font-semibold">2. ¿Con quién?</p>
+      <div class="mt-2 flex flex-wrap gap-2">
+        {profesionales.map((p, i) => (
+          <label class="cursor-pointer">
+            <input type="radio" name="profesional" value={p} checked={i === 0} class="peer sr-only" />
+            <span class="block rounded-full px-4 py-2 text-sm ring-1 ring-black/20 peer-checked:bg-(--accent-dark) peer-checked:text-white">{p}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+  )}
+  <div>
+    <p class="text-sm font-semibold">{profesionales.length ? "3" : "2"}. ¿Qué día?</p>
+    <div id="dias" class="mt-2 flex gap-2 overflow-x-auto pb-1"></div>
+  </div>
+  <div>
+    <p class="text-sm font-semibold">{profesionales.length ? "4" : "3"}. ¿A qué hora?</p>
+    <div id="horas" class="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5"></div>
+  </div>
+  <label class="block text-sm font-semibold">Tu nombre
+    <input name="nombre" required class="mt-2 w-full rounded-xl border border-black/20 px-3 py-2 font-normal" />
+  </label>
+  <p class="rounded-xl bg-(--soft) p-3 text-sm">En la versión real, los horarios ocupados se bloquean solos y se puede pagar una seña con Mercado Pago para confirmar.</p>
+  <p id="error-turno" class="hidden text-sm font-medium text-red-700">Elegí día y horario.</p>
+  <button type="submit" class="btn-wa w-full">Confirmar turno por WhatsApp</button>
+</form>
+
+<script is:inline define:vars={{ servicios, horarios, diasCerrados, telefono, negocio, prefijo }}>
+  const nombresDia = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"];
+  const elegido = ["bg-(--accent-dark)", "text-white"];
+  let diaElegido = null;
+  let horaElegida = null;
+
+  // Simula turnos ocupados de forma fija según el día, para que la demo se vea real.
+  const ocupado = (fecha, hora) => (fecha.getDate() * 7 + parseInt(hora)) % 4 === 0;
+
+  function dias() {
+    const cont = document.getElementById("dias");
+    const hoy = new Date();
+    const lista = [];
+    for (let i = 1; lista.length < 10; i++) {
+      const d = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + i);
+      if (!diasCerrados.includes(d.getDay())) lista.push(d);
+    }
+    cont.innerHTML = lista
+      .map((d, i) => `<button type="button" data-dia="${i}" class="shrink-0 rounded-2xl bg-white px-4 py-2 text-center text-sm ring-1 ring-black/20"><span class="block text-xs uppercase">${nombresDia[d.getDay()]}</span><span class="block text-lg font-semibold">${d.getDate()}</span></button>`)
+      .join("");
+    cont.querySelectorAll("[data-dia]").forEach((b) =>
+      b.addEventListener("click", () => {
+        diaElegido = lista[b.dataset.dia];
+        horaElegida = null;
+        cont.querySelectorAll("[data-dia]").forEach((x) => x.classList.remove(...elegido));
+        b.classList.add(...elegido);
+        horas();
+      })
+    );
+  }
+
+  function horas() {
+    const cont = document.getElementById("horas");
+    if (!diaElegido) {
+      cont.innerHTML = '<p class="col-span-full text-sm text-black/55">Elegí un día primero.</p>';
+      return;
+    }
+    cont.innerHTML = horarios
+      .map((h) => {
+        const lleno = ocupado(diaElegido, h);
+        return `<button type="button" data-hora="${h}" ${lleno ? "disabled" : ""} class="rounded-xl bg-white py-2 text-sm ring-1 ring-black/20 ${lleno ? "cursor-not-allowed line-through opacity-40" : "hover:bg-(--soft)"}">${h}</button>`;
+      })
+      .join("");
+    cont.querySelectorAll("[data-hora]:not([disabled])").forEach((b) =>
+      b.addEventListener("click", () => {
+        horaElegida = b.dataset.hora;
+        document.getElementById("error-turno").classList.add("hidden");
+        cont.querySelectorAll("[data-hora]").forEach((x) => x.classList.remove(...elegido));
+        b.classList.add(...elegido);
+      })
+    );
+  }
+
+  document.getElementById("form-turno").addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!diaElegido || !horaElegida) {
+      document.getElementById("error-turno").classList.remove("hidden");
+      return;
+    }
+    const d = new FormData(e.target);
+    const s = servicios.find((x) => x.id === d.get("servicio"));
+    const fecha = diaElegido.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" });
+    const texto = [
+      `*${prefijo} Turno en ${negocio}*`,
+      `Servicio: ${s.nombre} ($${s.precio.toLocaleString("es-AR")})`,
+      d.get("profesional") ? `Profesional: ${d.get("profesional")}` : null,
+      `Día: ${fecha} a las ${horaElegida} h`,
+      `Nombre: ${d.get("nombre")}`,
+    ]
+      .filter((l) => l !== null)
+      .join("\n");
+    window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(texto)}`, "_blank");
+  });
+
+  dias();
+  horas();
+</script>

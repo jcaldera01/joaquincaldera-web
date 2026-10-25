@@ -1,0 +1,47 @@
+---
+// Tabla de horarios con cartel de "abierto ahora / cerrado", calculado con la hora de Argentina.
+// horarios[0] es domingo. Un rango que cierra después de medianoche se escribe con cierre menor que apertura.
+
+interface Props {
+  horarios: [string, string][][];
+}
+
+const { horarios } = Astro.props;
+const dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+const orden = [1, 2, 3, 4, 5, 6, 0];
+const texto = (rangos: [string, string][]) => (rangos.length ? rangos.map(([a, b]) => `${a} a ${b}`).join(" y ") : "Cerrado");
+---
+
+<div>
+  <p id="estado-local" class="inline-flex items-center gap-2 rounded-full bg-black/5 px-3 py-1 text-sm font-semibold">
+    <span class="h-2 w-2 rounded-full bg-black/30"></span>Horarios
+  </p>
+  <dl class="mt-4 divide-y divide-black/10 text-sm">
+    {orden.map((i) => (
+      <div data-dia-semana={i} class="flex justify-between gap-4 py-2">
+        <dt>{dias[i]}</dt>
+        <dd class="text-right">{texto(horarios[i])}</dd>
+      </div>
+    ))}
+  </dl>
+</div>
+
+<script is:inline define:vars={{ horarios }}>
+  const partes = Object.fromEntries(
+    new Intl.DateTimeFormat("en-US", { timeZone: "America/Argentina/Buenos_Aires", weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+      .formatToParts(new Date())
+      .map((p) => [p.type, p.value])
+  );
+  const dia = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(partes.weekday);
+  const ahora = parseInt(partes.hour) * 60 + parseInt(partes.minute);
+  const min = (h) => parseInt(h.slice(0, 2)) * 60 + parseInt(h.slice(3));
+
+  const hoy = horarios[dia].some(([a, b]) => (min(b) > min(a) ? ahora >= min(a) && ahora < min(b) : ahora >= min(a)));
+  const deAyer = horarios[(dia + 6) % 7].some(([a, b]) => min(b) <= min(a) && ahora < min(b));
+  const abierto = hoy || deAyer;
+
+  const el = document.getElementById("estado-local");
+  el.innerHTML = `<span class="h-2 w-2 rounded-full ${abierto ? "bg-green-600" : "bg-red-600"}"></span>${abierto ? "Abierto ahora" : "Cerrado ahora"}`;
+  el.classList.add(abierto ? "text-green-800" : "text-red-800");
+  document.querySelector(`[data-dia-semana="${dia}"]`)?.classList.add("font-semibold");
+</script>

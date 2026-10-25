@@ -1,0 +1,80 @@
+---
+import Base from "../../layouts/Base.astro";
+import PropuestaBar from "../../components/PropuestaBar.astro";
+import Catalogo from "../../components/Catalogo.astro";
+import { waLink } from "../../config";
+
+// Servicios y productos de ejemplo: se reemplazan por los reales de la veterinaria.
+const servicios = [
+  { titulo: "Consultas", texto: "Atención clínica para perros y gatos, con turno o por orden de llegada." },
+  { titulo: "Vacunación", texto: "Plan de cachorros y refuerzos anuales, con libreta sanitaria." },
+  { titulo: "Cirugías", texto: "Castraciones y cirugías programadas." },
+  { titulo: "Pet shop", texto: "Alimentos, antiparasitarios y accesorios. Consultá stock por WhatsApp." },
+];
+
+const productos = [
+  { nombre: "Alimento perro adulto 15 kg", categoria: "Alimentos", precio: 52000 },
+  { nombre: "Alimento cachorro 7,5 kg", categoria: "Alimentos", precio: 31000 },
+  { nombre: "Alimento gato adulto 7,5 kg", categoria: "Alimentos", precio: 36000 },
+  { nombre: "Pipeta antipulgas perro 10-20 kg", categoria: "Antiparasitarios", precio: 9500 },
+  { nombre: "Antiparasitario interno", categoria: "Antiparasitarios", precio: 6800 },
+  { nombre: "Collar antipulgas gato", categoria: "Antiparasitarios", precio: 8200 },
+  { nombre: "Correa y collar reforzado", categoria: "Accesorios", precio: 14000 },
+  { nombre: "Piedras sanitarias 4 kg", categoria: "Accesorios", precio: 7500 },
+];
+---
+
+<Base title="Veterinaria Hollmann | Toay (propuesta)" description="Propuesta de sitio web para Veterinaria Hollmann: servicios, turnos y pet shop." noindex>
+  <PropuestaBar negocio="Veterinaria Hollmann" />
+
+  <div class="bg-[#f3f7fb] text-[#13283d]" style="--accent:#2c6fb3;--accent-dark:#163f6b;--soft:#e3edf7">
+    <header class="bg-[#163f6b] text-white">
+      <div class="mx-auto grid max-w-5xl gap-8 px-4 py-14 md:grid-cols-[1.4fr_1fr] md:items-center">
+        <div>
+          <p class="text-sm font-semibold tracking-widest text-[#9cc7f0] uppercase">Veterinaria · Toay</p>
+          <h1 class="font-display mt-2 text-5xl font-bold">Veterinaria Hollmann</h1>
+          <p class="mt-3 max-w-md text-white/80">Cuidamos la salud de tus mascotas. Pedí turno, consultá por productos o escribinos ante una urgencia.</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href={waLink("[PROPUESTA] Hola, quiero pedir un turno para mi mascota.")} target="_blank" rel="noopener" class="btn-wa">Pedir turno</a>
+            <a href="#petshop" class="btn border border-white/40 text-white hover:bg-white/10">Ver pet shop</a>
+          </div>
+        </div>
+        <div class="rounded-3xl bg-white/10 p-6 ring-1 ring-white/20">
+          <p class="text-sm font-semibold tracking-wider text-[#ffd166] uppercase">¿Es una urgencia?</p>
+          <p class="mt-2 text-xl font-bold">Escribinos y te decimos cómo seguir</p>
+          <a href={waLink("[PROPUESTA] Hola, tengo una urgencia con mi mascota.")} target="_blank" rel="noopener" class="mt-4 inline-block rounded-full bg-[#ffd166] px-5 py-2 font-semibold text-[#13283d]">Escribir ahora</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="mx-auto max-w-5xl px-4 py-14">
+      <h2 class="font-display text-3xl font-bold">Servicios</h2>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+        {servicios.map((s) => (
+          <div class="rounded-2xl bg-white p-5 ring-1 ring-black/10">
+            <h3 class="font-semibold">{s.titulo}</h3>
+            <p class="mt-2 text-sm text-black/65">{s.texto}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section id="petshop" class="mx-auto max-w-5xl scroll-mt-16 px-4 pb-14">
+      <h2 class="font-display text-3xl font-bold">Pet shop</h2>
+      <p class="mt-1 text-sm text-black/55">Productos y precios de ejemplo. En el sitio real va su stock, y lo actualizan desde un panel.</p>
+      <div class="mt-6">
+        <Catalogo productos={productos} prefijo="[PROPUESTA]" />
+      </div>
+    </section>
+
+    <section class="bg-white">
+      <div class="mx-auto grid max-w-5xl gap-8 px-4 py-14 md:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold">Dónde estamos</h2>
+          <p class="mt-3 text-black/70">Toay, La Pampa.</p>
+        </div>
+        <iframe title="Mapa de Veterinaria Hollmann" class="h-64 w-full rounded-2xl border-0" loading="lazy" src="https://www.google.com/maps?q=-36.6781872,-64.3765428&z=16&output=embed"></iframe>
+      </div>
+    </section>
+  </div>
+</Base>

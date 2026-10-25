@@ -1,0 +1,143 @@
+---
+// Menú con carrito que arma el pedido y lo manda por WhatsApp.
+// Los colores salen de las variables --accent, --accent-dark y --soft del contenedor.
+import { SITE } from "../config";
+
+interface Item {
+  id: string;
+  nombre: string;
+  precio: number;
+  nota?: string;
+}
+
+interface Props {
+  menu: { categoria: string; items: Item[] }[];
+  negocio: string;
+  prefijo: string;
+  envio?: number;
+  telefono?: string;
+}
+
+const { menu, negocio, prefijo, envio = 0, telefono = SITE.whatsapp } = Astro.props;
+const precios = Object.fromEntries(menu.flatMap((c) => c.items.map((i) => [i.id, { nombre: i.nombre, precio: i.precio }])));
+const fmt = (n: number) => n.toLocaleString("es-AR");
+---
+
+<nav class="sticky top-9 z-30 border-b border-black/5 bg-(--soft)/95 backdrop-blur sm:top-10">
+  <div class="mx-auto flex max-w-5xl gap-2 overflow-x-auto px-4 py-3 text-sm font-medium">
+    {menu.map((c) => <a href={`#${c.categoria}`} class="shrink-0 rounded-full bg-white px-4 py-1.5 ring-1 ring-black/10 hover:bg-(--soft)">{c.categoria}</a>)}
+  </div>
+</nav>
+
+<div class="mx-auto max-w-5xl px-4 pb-32">
+  {menu.map((c) => (
+    <section id={c.categoria} class="scroll-mt-28 pt-10">
+      <h2 class="font-display text-2xl font-bold text-(--accent-dark)">{c.categoria}</h2>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2">
+        {c.items.map((item) => (
+          <div class="flex items-center justify-between gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5">
+            <div>
+              <p class="font-semibold">{item.nombre}</p>
+              {item.nota && <p class="text-sm text-black/55">{item.nota}</p>}
+              <p class="mt-1 font-semibold text-(--accent)">${fmt(item.precio)}</p>
+            </div>
+            <div class="flex shrink-0 items-center gap-2">
+              <button data-menos={item.id} class="h-9 w-9 rounded-full bg-black/5 text-lg font-bold hover:bg-black/10" aria-label={`Quitar ${item.nombre}`}>−</button>
+              <span data-cant={item.id} class="w-5 text-center font-semibold">0</span>
+              <button data-mas={item.id} class="h-9 w-9 rounded-full bg-(--accent) text-lg font-bold text-white hover:bg-(--accent-dark)" aria-label={`Agregar ${item.nombre}`}>+</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  <section id="pedido" class="mt-12 scroll-mt-16 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+    <h2 class="font-display text-2xl font-bold text-(--accent-dark)">Tu pedido</h2>
+    <ul id="resumen" class="mt-4 space-y-1 text-sm"></ul>
+    <p id="vacio" class="mt-4 text-sm text-black/55">Todavía no agregaste nada.</p>
+    <form id="form-pedido" class="mt-6 grid gap-4 sm:grid-cols-2">
+      <label class="text-sm font-medium">Nombre
+        <input name="nombre" required class="mt-1 w-full rounded-xl border border-black/15 px-3 py-2" />
+      </label>
+      <fieldset class="text-sm font-medium">
+        <legend>Entrega</legend>
+        <div class="mt-2 flex gap-4 font-normal">
+          <label class="flex items-center gap-2"><input type="radio" name="entrega" value="retiro" checked /> Retiro en el local</label>
+          <label class="flex items-center gap-2"><input type="radio" name="entrega" value="delivery" /> Delivery</label>
+        </div>
+      </fieldset>
+      <label class="text-sm font-medium sm:col-span-2">Dirección (si es delivery)
+        <input name="direccion" class="mt-1 w-full rounded-xl border border-black/15 px-3 py-2" />
+      </label>
+      <label class="text-sm font-medium sm:col-span-2">Comentarios
+        <textarea name="comentario" rows="2" class="mt-1 w-full rounded-xl border border-black/15 px-3 py-2" placeholder="Sin cebolla, paga con efectivo, etc."></textarea>
+      </label>
+      <p id="error-pedido" class="hidden text-sm font-medium text-red-700 sm:col-span-2">Agregá al menos un producto.</p>
+      <button class="btn-wa sm:col-span-2" type="submit">Enviar pedido por WhatsApp</button>
+    </form>
+  </section>
+</div>
+
+<a href="#pedido" id="barra-total" class="fixed inset-x-4 bottom-4 z-40 mx-auto hidden max-w-md items-center justify-between rounded-full bg-(--accent-dark) px-6 py-4 text-white shadow-2xl">
+  <span><span id="items-total">0</span> productos</span>
+  <span class="font-semibold">Ver pedido · $<span id="monto-total">0</span></span>
+</a>
+
+<script is:inline define:vars={{ precios, telefono, envio, negocio, prefijo }}>
+  const carrito = {};
+  const fmt = (n) => n.toLocaleString("es-AR");
+  const total = () => Object.entries(carrito).reduce((s, [id, c]) => s + precios[id].precio * c, 0);
+
+  function render() {
+    const cantidad = Object.values(carrito).reduce((a, b) => a + b, 0);
+    document.querySelectorAll("[data-cant]").forEach((el) => (el.textContent = carrito[el.dataset.cant] || 0));
+    document.getElementById("items-total").textContent = cantidad;
+    document.getElementById("monto-total").textContent = fmt(total());
+    const barra = document.getElementById("barra-total");
+    barra.classList.toggle("hidden", cantidad === 0);
+    barra.classList.toggle("flex", cantidad > 0);
+    document.getElementById("vacio").classList.toggle("hidden", cantidad > 0);
+    if (cantidad) document.getElementById("error-pedido").classList.add("hidden");
+    document.getElementById("resumen").innerHTML =
+      Object.entries(carrito)
+        .map(([id, c]) => `<li class="flex justify-between"><span>${c} × ${precios[id].nombre}</span><span>$${fmt(precios[id].precio * c)}</span></li>`)
+        .join("") +
+      (cantidad ? `<li class="flex justify-between border-t border-black/10 pt-2 font-semibold"><span>Total</span><span>$${fmt(total())}</span></li>` : "");
+  }
+
+  document.addEventListener("click", (e) => {
+    const mas = e.target.closest("[data-mas]");
+    const menos = e.target.closest("[data-menos]");
+    if (mas) carrito[mas.dataset.mas] = (carrito[mas.dataset.mas] || 0) + 1;
+    if (menos && carrito[menos.dataset.menos]) {
+      carrito[menos.dataset.menos] -= 1;
+      if (!carrito[menos.dataset.menos]) delete carrito[menos.dataset.menos];
+    }
+    if (mas || menos) render();
+  });
+
+  document.getElementById("form-pedido").addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!Object.keys(carrito).length) {
+      document.getElementById("error-pedido").classList.remove("hidden");
+      return;
+    }
+    const d = new FormData(e.target);
+    const delivery = d.get("entrega") === "delivery";
+    const lineas = Object.entries(carrito).map(([id, c]) => `• ${c} × ${precios[id].nombre} — $${fmt(precios[id].precio * c)}`);
+    const texto = [
+      `*${prefijo} Pedido para ${negocio}*`,
+      ...lineas,
+      delivery && envio ? `• Envío — $${fmt(envio)}` : null,
+      `*Total: $${fmt(total() + (delivery ? envio : 0))}*`,
+      "",
+      `Nombre: ${d.get("nombre")}`,
+      delivery ? `Delivery a: ${d.get("direccion") || "(sin dirección)"}` : "Retiro en el local",
+      d.get("comentario") ? `Comentarios: ${d.get("comentario")}` : null,
+    ]
+      .filter((l) => l !== null)
+      .join("\n");
+    window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(texto)}`, "_blank");
+  });
+</script>

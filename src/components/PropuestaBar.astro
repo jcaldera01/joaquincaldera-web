@@ -1,0 +1,20 @@
+---
+import { SITE } from "../config";
+
+interface Props {
+  negocio: string;
+}
+
+const { negocio } = Astro.props;
+---
+
+<div class="sticky top-0 z-50 h-9 bg-monte-900 text-arena-50 sm:h-10">
+  <div class="mx-auto flex h-full max-w-6xl items-center justify-between gap-3 px-4 text-xs sm:text-sm">
+    <p class="truncate">
+      <span class="mr-1.5 rounded bg-arena-500 px-1.5 py-0.5 font-semibold text-monte-900">PROPUESTA</span>
+      <span class="hidden sm:inline">Diseño de muestra para {negocio} · No es el sitio oficial · Datos de ejemplo ·{" "}</span>
+      <span class="sm:hidden">No es el sitio oficial ·{" "}</span>
+      <a href="/" class="font-semibold underline underline-offset-2">{SITE.name}</a>
+    </p>
+  </div>
+</div>

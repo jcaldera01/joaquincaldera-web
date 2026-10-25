@@ -1,0 +1,81 @@
+---
+import Base from "../../layouts/Base.astro";
+import PropuestaBar from "../../components/PropuestaBar.astro";
+import Catalogo from "../../components/Catalogo.astro";
+import Horarios from "../../components/Horarios.astro";
+import { waLink } from "../../config";
+
+// Dirección, horarios y calificación tomados de su ficha de Google. Productos y precios de ejemplo.
+const horarios: [string, string][][] = [
+  [],
+  [["08:00", "12:30"], ["16:30", "20:30"]],
+  [["08:00", "12:30"], ["16:30", "20:30"]],
+  [["08:00", "12:30"], ["16:30", "20:30"]],
+  [["08:00", "12:30"], ["16:30", "20:30"]],
+  [["08:00", "12:30"], ["16:30", "20:30"]],
+  [["09:00", "13:00"], ["17:00", "20:00"]],
+];
+
+const rubros = ["Caza", "Pesca", "Camping", "Óptica", "Cuchillería", "Indumentaria"];
+
+const productos = [
+  { nombre: "Caña de pesca 2,10 m", categoria: "Pesca", precio: 38000 },
+  { nombre: "Reel frontal", categoria: "Pesca", precio: 45000 },
+  { nombre: "Kayak sit-on-top", categoria: "Pesca", nota: "Consultá modelos y colores" },
+  { nombre: "Carpa iglú 4 personas", categoria: "Camping", precio: 120000 },
+  { nombre: "Silla plegable", categoria: "Camping", precio: 25000 },
+  { nombre: "Conservadora 25 l", categoria: "Camping", precio: 48000 },
+  { nombre: "Binocular 10x50", categoria: "Óptica", precio: 85000 },
+  { nombre: "Mira telescópica 3-9x40", categoria: "Óptica", precio: 110000 },
+  { nombre: "Cuchillo de caza", categoria: "Cuchillería", precio: 32000 },
+  { nombre: "Campera camuflada", categoria: "Indumentaria", precio: 75000 },
+  { nombre: "Armas y municiones", categoria: "Caza", nota: "Venta solo en el local, a quien tenga credencial de legítimo usuario vigente." },
+];
+---
+
+<Base title="Armería El Tajamar | Santa Rosa (propuesta)" description="Propuesta de sitio web para Armería El Tajamar: rubros, catálogo, horarios y consultas por WhatsApp." noindex>
+  <PropuestaBar negocio="Armería El Tajamar" />
+
+  <div class="bg-[#f5f2ea] text-[#22251c]" style="--accent:#6b7a3a;--accent-dark:#2f3820;--soft:#e8e6d6">
+    <header class="bg-[#2f3820] text-[#f5f2ea]">
+      <div class="mx-auto max-w-5xl px-4 py-16">
+        <p class="text-sm font-semibold tracking-widest text-[#c8b273] uppercase">Caza · Pesca · Camping · Santa Rosa</p>
+        <h1 class="font-display mt-2 text-5xl font-bold md:text-6xl">Armería El Tajamar</h1>
+        <p class="mt-3 max-w-xl text-[#f5f2ea]/80">Todo para salir al campo, al río o de camping, con atención de gente que sabe. Consultá stock antes de venir.</p>
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          <a href={waLink("[PROPUESTA] Hola, quería hacer una consulta.")} target="_blank" rel="noopener" class="btn-wa">Consultar por WhatsApp</a>
+          <span class="rounded-full bg-white/10 px-3 py-1.5 text-sm">★ 4,6 · 126 opiniones en Google</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="mx-auto max-w-5xl px-4 py-12">
+      <h2 class="font-display text-3xl font-bold">Rubros</h2>
+      <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
+        {rubros.map((r) => <div class="rounded-2xl bg-white px-4 py-5 text-center font-semibold ring-1 ring-black/10">{r}</div>)}
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-5xl px-4 pb-14">
+      <h2 class="font-display text-3xl font-bold">Catálogo</h2>
+      <p class="mt-1 text-sm text-black/55">Productos y precios de ejemplo. En el sitio real va su stock, y lo actualizan desde un panel.</p>
+      <div class="mt-6">
+        <Catalogo productos={productos} prefijo="[PROPUESTA]" />
+      </div>
+      <p class="mt-6 rounded-2xl bg-[#e8e6d6] p-4 text-sm">Las armas y municiones no se venden online: se muestran solo para consulta y se venden en el local a quien tenga credencial de legítimo usuario vigente.</p>
+    </section>
+
+    <section class="bg-white">
+      <div class="mx-auto grid max-w-5xl gap-10 px-4 py-14 md:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold">Horarios y ubicación</h2>
+          <p class="mt-3 text-black/70">Marcelo T. de Alvear 413, Santa Rosa, La Pampa.</p>
+          <div class="mt-6">
+            <Horarios horarios={horarios} />
+          </div>
+        </div>
+        <iframe title="Mapa de Armería El Tajamar" class="h-80 w-full rounded-2xl border-0" loading="lazy" src="https://www.google.com/maps?q=Marcelo+T.+de+Alvear+413,+Santa+Rosa,+La+Pampa&z=16&output=embed"></iframe>
+      </div>
+    </section>
+  </div>
+</Base>

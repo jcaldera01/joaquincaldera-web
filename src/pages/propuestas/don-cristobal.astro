@@ -1,0 +1,94 @@
+---
+import Base from "../../layouts/Base.astro";
+import PropuestaBar from "../../components/PropuestaBar.astro";
+import ReservaMesa from "../../components/ReservaMesa.astro";
+import Horarios from "../../components/Horarios.astro";
+
+// Dirección, horarios y calificación tomados de su perfil público de Google. Carta y precios de ejemplo.
+const horarios: [string, string][][] = [
+  [["20:00", "00:00"]],
+  [],
+  [["12:00", "15:00"], ["20:00", "00:30"]],
+  [["12:00", "15:00"], ["20:00", "00:30"]],
+  [["12:00", "15:00"], ["20:00", "00:30"]],
+  [["12:00", "15:00"], ["20:00", "00:30"]],
+  [["12:00", "15:00"], ["20:00", "00:30"]],
+];
+
+const turnos = [
+  { nombre: "Almuerzo", horas: ["12:00", "12:30", "13:00", "13:30", "14:00"], dias: [2, 3, 4, 5, 6] },
+  { nombre: "Cena", horas: ["20:30", "21:00", "21:30", "22:00", "22:30", "23:00"], dias: [0, 2, 3, 4, 5, 6] },
+];
+
+const carta = [
+  { categoria: "Parrilla", items: [["Bife de chorizo", 21000], ["Vacío", 19000], ["Parrillada para dos", 38000]] },
+  { categoria: "Pastas caseras", items: [["Sorrentinos de jamón y queso", 14500], ["Ñoquis de papa", 12000], ["Lasaña de carne", 15500]] },
+  { categoria: "Minutas", items: [["Milanesa napolitana con fritas", 16000], ["Suprema a caballo", 15000]] },
+  { categoria: "Postres", items: [["Flan casero con dulce de leche", 6000], ["Panqueques con dulce de leche", 6500]] },
+] as const;
+
+const fmt = (n: number) => n.toLocaleString("es-AR");
+---
+
+<Base title="Bodegón Don Cristóbal | Santa Rosa (propuesta)" description="Propuesta de sitio web para Bodegón Don Cristóbal: carta, horarios y reservas por WhatsApp." noindex>
+  <PropuestaBar negocio="Bodegón Don Cristóbal" />
+
+  <div class="bg-[#f8f1e7] text-[#2a1810]" style="--accent:#a3322a;--accent-dark:#5a1d18;--soft:#f1e3d3">
+    <header class="relative bg-[#5a1d18] text-[#f8f1e7]">
+      <div class="mx-auto max-w-5xl px-4 py-20 text-center">
+        <p class="text-sm tracking-[0.3em] text-[#e2b77a] uppercase">Bodegón · Santa Rosa</p>
+        <h1 class="font-display mt-3 text-5xl font-bold md:text-7xl">Don Cristóbal</h1>
+        <p class="mx-auto mt-4 max-w-md text-[#f8f1e7]/80">Cocina de bodegón: parrilla, pastas caseras y platos abundantes, como siempre.</p>
+        <div class="mt-7 flex flex-wrap justify-center gap-3">
+          <a href="#reservar" class="btn bg-[#e2b77a] text-[#2a1810] hover:brightness-105">Reservar mesa</a>
+          <a href="#carta" class="btn border border-white/40 text-white hover:bg-white/10">Ver la carta</a>
+        </div>
+        <p class="mt-6 text-sm text-[#f8f1e7]/70">★ 4,3 · más de 1.100 opiniones en Google</p>
+      </div>
+    </header>
+
+    <section id="carta" class="mx-auto max-w-4xl scroll-mt-16 px-4 py-14">
+      <h2 class="font-display text-center text-3xl font-bold">La carta</h2>
+      <p class="mt-1 text-center text-sm text-black/55">Platos y precios de ejemplo. En el sitio real va su carta, y la actualizan desde un panel.</p>
+      <div class="mt-10 grid gap-10 md:grid-cols-2">
+        {carta.map((c) => (
+          <div>
+            <h3 class="font-display border-b-2 border-[#a3322a] pb-2 text-xl font-bold text-[#5a1d18]">{c.categoria}</h3>
+            <ul class="mt-3 space-y-2">
+              {c.items.map(([plato, precio]) => (
+                <li class="flex items-baseline gap-2">
+                  <span>{plato}</span>
+                  <span class="flex-1 border-b border-dotted border-black/25"></span>
+                  <span class="font-semibold">${fmt(precio)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section id="reservar" class="mx-auto max-w-3xl scroll-mt-16 px-4 pb-14">
+      <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/10 md:p-8">
+        <h2 class="font-display text-2xl font-bold">Reservá tu mesa</h2>
+        <p class="mt-1 text-sm text-black/60">Te confirmamos por WhatsApp.</p>
+        <div class="mt-6">
+          <ReservaMesa turnos={turnos} negocio="Bodegón Don Cristóbal" prefijo="[PROPUESTA]" />
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white">
+      <div class="mx-auto grid max-w-5xl gap-10 px-4 py-14 md:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold">Horarios y ubicación</h2>
+          <p class="mt-3 text-black/70">25 de Mayo 126, Santa Rosa, La Pampa.</p>
+          <div class="mt-6">
+            <Horarios horarios={horarios} />
+          </div>
+        </div>
+        <iframe title="Mapa de Bodegón Don Cristóbal" class="h-80 w-full rounded-2xl border-0" loading="lazy" src="https://www.google.com/maps?q=-36.6180768,-64.2887317&z=17&output=embed"></iframe>
+      </div>
+    </section>
+  </div>
+</Base>

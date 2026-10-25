@@ -1,0 +1,71 @@
+---
+import Base from "../../layouts/Base.astro";
+import PropuestaBar from "../../components/PropuestaBar.astro";
+import ReservaTurno from "../../components/ReservaTurno.astro";
+
+// Tratamientos y precios de ejemplo: se reemplazan por los reales de Santé.
+const servicios = [
+  { id: "limpieza", nombre: "Limpieza facial profunda", duracion: 60, precio: 22000 },
+  { id: "dermaplaning", nombre: "Dermaplaning", duracion: 45, precio: 25000 },
+  { id: "masaje", nombre: "Masaje descontracturante", duracion: 60, precio: 20000 },
+  { id: "drenaje", nombre: "Drenaje linfático", duracion: 60, precio: 21000 },
+  { id: "pestanas", nombre: "Lifting de pestañas", duracion: 60, precio: 18000 },
+  { id: "depilacion", nombre: "Depilación definitiva (por zona)", duracion: 30, precio: 15000 },
+];
+
+const horarios = ["09:00", "10:00", "11:00", "12:00", "16:00", "17:00", "18:00", "19:00"];
+const fmt = (n: number) => n.toLocaleString("es-AR");
+---
+
+<Base title="Santé Salud & Estética | Toay (propuesta)" description="Propuesta de sitio web para Santé Salud & Estética: tratamientos y turnos online." noindex>
+  <PropuestaBar negocio="Santé Salud & Estética" />
+
+  <div class="min-h-screen bg-[#f7f4ef] text-[#2d3a35]" style="--accent:#8aa399;--accent-dark:#2d3a35;--soft:#e7eee9">
+    <header class="mx-auto grid max-w-5xl items-center gap-10 px-4 py-16 md:grid-cols-2">
+      <div>
+        <p class="text-sm tracking-[0.3em] text-[#6f8a7f] uppercase">Salud & Estética · Toay</p>
+        <h1 class="font-display mt-3 text-5xl leading-tight font-bold md:text-6xl">Santé</h1>
+        <p class="mt-4 max-w-md text-[#2d3a35]/75">Tratamientos faciales, corporales y de bienestar. Elegí el tuyo y reservá el turno en un minuto, cuando quieras.</p>
+        <a href="#turno" class="btn mt-6 bg-[#2d3a35] text-white hover:bg-[#1f2925]">Reservar turno</a>
+      </div>
+      <div class="relative mx-auto aspect-square w-full max-w-xs" aria-hidden="true">
+        <div class="absolute inset-0 rounded-full bg-[#dfe8e3]"></div>
+        <div class="absolute inset-8 rounded-full bg-[#c9d8d0]"></div>
+        <div class="absolute inset-16 rounded-full bg-[#8aa399]"></div>
+      </div>
+    </header>
+
+    <section class="mx-auto max-w-5xl px-4">
+      <h2 class="font-display text-2xl font-bold">Tratamientos</h2>
+      <p class="mt-1 text-sm text-black/55">Lista y precios de ejemplo. En el sitio real van los tratamientos de Santé.</p>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+        {servicios.map((s) => (
+          <div class="rounded-2xl bg-white p-5 ring-1 ring-black/10">
+            <p class="font-semibold">{s.nombre}</p>
+            <p class="mt-1 text-sm text-black/55">{s.duracion} min</p>
+            <p class="mt-2 font-semibold text-[#5d7a6f]">${fmt(s.precio)}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section id="turno" class="mx-auto mt-14 max-w-3xl scroll-mt-16 px-4 pb-16">
+      <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/10 md:p-8">
+        <h2 class="font-display text-2xl font-bold">Reservá tu turno</h2>
+        <div class="mt-6">
+          <ReservaTurno servicios={servicios} horarios={horarios} diasCerrados={[0]} negocio="Santé Salud & Estética" prefijo="[PROPUESTA]" />
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white">
+      <div class="mx-auto grid max-w-5xl gap-8 px-4 py-14 md:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold">Dónde estamos</h2>
+          <p class="mt-3 text-black/70">Toay, La Pampa.</p>
+        </div>
+        <iframe title="Mapa de Santé" class="h-64 w-full rounded-2xl border-0" loading="lazy" src="https://www.google.com/maps?q=-36.6689356,-64.3652653&z=16&output=embed"></iframe>
+      </div>
+    </section>
+  </div>
+</Base>

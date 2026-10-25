@@ -1,0 +1,83 @@
+---
+// Reserva de mesa por WhatsApp: día, turno, hora y cantidad de personas.
+// Los colores salen de las variables --accent, --accent-dark y --soft del contenedor.
+import { SITE } from "../config";
+
+interface Props {
+  turnos: { nombre: string; horas: string[]; dias: number[] }[]; // dias: 0 = domingo
+  negocio: string;
+  prefijo: string;
+  telefono?: string;
+}
+
+const { turnos, negocio, prefijo, telefono = SITE.whatsapp } = Astro.props;
+---
+
+<form id="form-mesa" class="grid gap-4 sm:grid-cols-2">
+  <label class="text-sm font-semibold">Día
+    <select name="dia" id="mesa-dia" required class="mt-2 w-full rounded-xl border border-black/20 bg-white px-3 py-2 font-normal"></select>
+  </label>
+  <label class="text-sm font-semibold">Personas
+    <select name="personas" class="mt-2 w-full rounded-xl border border-black/20 bg-white px-3 py-2 font-normal">
+      {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => <option value={n} selected={n === 2}>{n} {n === 1 ? "persona" : "personas"}</option>)}
+    </select>
+  </label>
+  <label class="text-sm font-semibold">Turno
+    <select name="turno" id="mesa-turno" class="mt-2 w-full rounded-xl border border-black/20 bg-white px-3 py-2 font-normal"></select>
+  </label>
+  <label class="text-sm font-semibold">Hora
+    <select name="hora" id="mesa-hora" class="mt-2 w-full rounded-xl border border-black/20 bg-white px-3 py-2 font-normal"></select>
+  </label>
+  <label class="text-sm font-semibold sm:col-span-2">Nombre
+    <input name="nombre" required class="mt-2 w-full rounded-xl border border-black/20 px-3 py-2 font-normal" />
+  </label>
+  <label class="text-sm font-semibold sm:col-span-2">Comentarios
+    <input name="comentario" class="mt-2 w-full rounded-xl border border-black/20 px-3 py-2 font-normal" placeholder="Cumpleaños, silla para bebé, etc." />
+  </label>
+  <button type="submit" class="btn-wa sm:col-span-2">Reservar por WhatsApp</button>
+</form>
+
+<script is:inline define:vars={{ turnos, telefono, negocio, prefijo }}>
+  const selDia = document.getElementById("mesa-dia");
+  const selTurno = document.getElementById("mesa-turno");
+  const selHora = document.getElementById("mesa-hora");
+  const hoy = new Date();
+  const fechas = [];
+  for (let i = 0; fechas.length < 14 && i < 30; i++) {
+    const d = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + i);
+    if (turnos.some((t) => t.dias.includes(d.getDay()))) fechas.push(d);
+  }
+  selDia.innerHTML = fechas
+    .map((d, i) => `<option value="${i}">${d.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" })}</option>`)
+    .join("");
+
+  function cargarTurnos() {
+    const d = fechas[selDia.value];
+    const disponibles = turnos.filter((t) => t.dias.includes(d.getDay()));
+    selTurno.innerHTML = disponibles.map((t) => `<option>${t.nombre}</option>`).join("");
+    cargarHoras();
+  }
+  function cargarHoras() {
+    const t = turnos.find((x) => x.nombre === selTurno.value);
+    selHora.innerHTML = t.horas.map((h) => `<option>${h}</option>`).join("");
+  }
+  selDia.addEventListener("change", cargarTurnos);
+  selTurno.addEventListener("change", cargarHoras);
+  cargarTurnos();
+
+  document.getElementById("form-mesa").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const fecha = fechas[f.get("dia")].toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" });
+    const texto = [
+      `*${prefijo} Reserva en ${negocio}*`,
+      `Día: ${fecha}, ${f.get("turno").toLowerCase()} a las ${f.get("hora")} h`,
+      `Personas: ${f.get("personas")}`,
+      `Nombre: ${f.get("nombre")}`,
+      f.get("comentario") ? `Comentarios: ${f.get("comentario")}` : null,
+    ]
+      .filter((l) => l !== null)
+      .join("\n");
+    window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(texto)}`, "_blank");
+  });
+</script>

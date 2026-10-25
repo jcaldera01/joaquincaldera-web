@@ -47,19 +47,39 @@ const planes = [
   {
     nombre: "Vidriera",
     para: "Para que te encuentren",
-    items: ["Una página con todo lo importante", "Horarios, mapa y botón de WhatsApp", "Tu Instagram integrado", "Ficha de Google Maps optimizada"],
+    items: ["Una página con todo lo importante", "Horarios, mapa y botón de WhatsApp", "Ficha de Google Maps optimizada", "Informe mensual de visitas"],
   },
   {
     nombre: "Catálogo",
     para: "Para mostrar lo que vendés",
-    items: ["Todo lo de Vidriera", "Menú o catálogo con precios", "Panel para cambiar precios y fotos", "Posicionamiento en Google local"],
+    items: ["Todo lo de Vidriera", "Menú o catálogo con precios", "Panel para cambiar precios y fotos", "Informe con clics a WhatsApp y búsquedas en Google"],
     destacado: true,
   },
   {
     nombre: "Ventas",
     para: "Para vender o dar turnos online",
-    items: ["Todo lo de Catálogo", "Pedidos o turnos online", "Cobro con Mercado Pago", "Panel de pedidos y turnos"],
+    items: ["Todo lo de Catálogo", "Pedidos o turnos online", "Cobro con Mercado Pago", "Informe de pedidos, turnos y ventas"],
   },
+];
+
+const metricas = [
+  { valor: "1.240", etiqueta: "Visitas al sitio", cambio: "+18 %" },
+  { valor: "312", etiqueta: "Clics a WhatsApp", cambio: "+24 %" },
+  { valor: "86", etiqueta: "Pedidos o turnos", cambio: "+11 %" },
+  { valor: "0,9 s", etiqueta: "Tiempo de carga", cambio: "Rápido" },
+];
+
+const busquedas = [
+  { termino: "rotisería toay", veces: 214 },
+  { termino: "comida para llevar toay", veces: 131 },
+  { termino: "empanadas toay", veces: 96 },
+];
+
+const incluye = [
+  { titulo: "Tráfico", texto: "Cuánta gente entra, desde qué celulares y de dónde llegan: Google, Instagram o WhatsApp." },
+  { titulo: "Resultados", texto: "Clics al botón de WhatsApp, llamadas, pedidos y turnos. Lo que de verdad te trae clientes." },
+  { titulo: "Google", texto: "Qué buscan para encontrarte, en qué posición aparecés y cuántos piden indicaciones para llegar." },
+  { titulo: "Rendimiento", texto: "Velocidad de carga en celular y salud técnica del sitio. Si algo anda lento, lo arreglo." },
 ];
 
 const pasos = [
@@ -76,7 +96,11 @@ const preguntas = [
   },
   {
     p: "¿Qué incluye el abono mensual?",
-    r: "Dominio, hosting, seguridad, copias de respaldo, los cambios que necesites cada mes y un resumen de cuánta gente visitó tu web y te escribió por WhatsApp.",
+    r: "Dominio, hosting, seguridad, copias de respaldo, los cambios que necesites cada mes y un informe mensual con visitas, clics a WhatsApp y cómo te encuentran en Google.",
+  },
+  {
+    p: "¿Cómo sé si la web me está sirviendo?",
+    r: "Todos los meses te mando un informe simple por WhatsApp: cuánta gente entró, cuántos te escribieron, qué buscaron en Google para encontrarte y qué tan rápido carga tu sitio. Con eso decidimos qué mejorar.",
   },
   {
     p: "Ya tengo Instagram, ¿para qué quiero una web?",
@@ -118,6 +142,7 @@ const jsonLd = {
       <div class="hidden items-center gap-6 text-sm font-medium md:flex">
         <a href="#demos" class="hover:text-monte-500">Demos</a>
         <a href="#planes" class="hover:text-monte-500">Planes</a>
+        <a href="#informes" class="hover:text-monte-500">Informes</a>
         <a href="#como-trabajo" class="hover:text-monte-500">Cómo trabajo</a>
         <a href="#preguntas" class="hover:text-monte-500">Preguntas</a>
       </div>
@@ -229,6 +254,50 @@ const jsonLd = {
             <p class="text-monte-900/70">Responde precios y horarios, toma pedidos y turnos las 24 horas, y te pasa la charla cuando hace falta.</p>
           </div>
           <a href={waLink("Hola Joaquín, quiero saber más del asistente de WhatsApp.")} target="_blank" rel="noopener" class="btn-ghost mt-4 shrink-0 md:mt-0">Quiero saber más</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="informes" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-20">
+      <div class="grid items-start gap-12 md:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold">Cada mes sabés si tu web vende</h2>
+          <p class="mt-3 text-monte-900/75">Todos los planes incluyen un informe mensual, claro y sin palabras técnicas, que te llega por WhatsApp. Ves cuánta gente te encontró, cuántos te escribieron y qué conviene mejorar.</p>
+          <div class="mt-8 grid gap-4 sm:grid-cols-2">
+            {incluye.map((i) => (
+              <div class="rounded-2xl bg-white p-5 ring-1 ring-monte-900/10">
+                <h3 class="font-semibold text-monte-700">{i.titulo}</h3>
+                <p class="mt-1 text-sm text-monte-900/75">{i.texto}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div class="rounded-3xl bg-monte-900 p-6 text-arena-50 shadow-xl md:p-8">
+          <div class="flex items-center justify-between text-sm">
+            <p class="font-semibold">Informe de septiembre</p>
+            <span class="rounded-full bg-white/10 px-2.5 py-0.5 text-xs">Ejemplo</span>
+          </div>
+          <p class="text-xs text-arena-50/60">Rotisería en Toay · comparado con agosto</p>
+          <div class="mt-6 grid grid-cols-2 gap-3">
+            {metricas.map((m) => (
+              <div class="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
+                <p class="font-display text-3xl font-bold">{m.valor}</p>
+                <p class="mt-1 text-xs text-arena-50/70">{m.etiqueta}</p>
+                <p class="mt-2 text-xs font-semibold text-wa">{m.cambio}</p>
+              </div>
+            ))}
+          </div>
+          <p class="mt-6 text-xs font-semibold tracking-wider text-arena-300 uppercase">Cómo te buscaron en Google</p>
+          <ul class="mt-3 space-y-2 text-sm">
+            {busquedas.map((b) => (
+              <li class="flex items-center gap-3">
+                <span class="flex-1">{b.termino}</span>
+                <span class="h-1.5 rounded-full bg-arena-500" style={`width:${Math.round((b.veces / busquedas[0].veces) * 6)}rem`}></span>
+                <span class="w-8 text-right text-arena-50/70">{b.veces}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-6 rounded-2xl bg-white/5 p-4 text-sm"><strong>Recomendación del mes:</strong> los sábados a la noche se triplican las visitas. Conviene publicar el menú del fin de semana en Instagram el viernes.</p>
         </div>
       </div>
     </section>
