@@ -1,0 +1,178 @@
+---
+import Base from "../../layouts/Base.astro";
+import DemoBar from "../../components/DemoBar.astro";
+import { SITE } from "../../config";
+
+// Precios de ejemplo. En un cliente real, el menú sale de Supabase y el dueño lo edita desde su panel.
+const menu = [
+  {
+    categoria: "Empanadas",
+    items: [
+      { id: "emp-carne", nombre: "Empanada de carne cortada a cuchillo", precio: 1800 },
+      { id: "emp-jyq", nombre: "Empanada de jamón y queso", precio: 1700 },
+      { id: "emp-docena", nombre: "Docena surtida", precio: 19000, nota: "Elegí los gustos en el comentario" },
+    ],
+  },
+  {
+    categoria: "Pizzas",
+    items: [
+      { id: "piz-muzza", nombre: "Muzzarella", precio: 12000 },
+      { id: "piz-napo", nombre: "Napolitana", precio: 13500 },
+      { id: "piz-especial", nombre: "Especial de la casa", precio: 15000, nota: "Jamón, morrones, huevo y aceitunas" },
+    ],
+  },
+  {
+    categoria: "Platos",
+    items: [
+      { id: "mila-napo", nombre: "Milanesa napolitana con papas fritas", precio: 14500 },
+      { id: "pollo", nombre: "Pollo al spiedo entero", precio: 16000 },
+      { id: "pollo-medio", nombre: "Medio pollo con papas", precio: 11000 },
+    ],
+  },
+  {
+    categoria: "Bebidas",
+    items: [
+      { id: "gaseosa", nombre: "Gaseosa 1,5 l", precio: 4500 },
+      { id: "cerveza", nombre: "Cerveza 1 l", precio: 5500 },
+    ],
+  },
+];
+
+const precios = Object.fromEntries(menu.flatMap((c) => c.items.map((i) => [i.id, { nombre: i.nombre, precio: i.precio }])));
+const fmt = (n: number) => n.toLocaleString("es-AR");
+---
+
+<Base title="La Tranquera | Rotisería y pizzería en Toay (demo)" description="Demo de sitio web para rotisería: menú con precios y pedidos por WhatsApp.">
+  <DemoBar rubro="rotisería" />
+
+  <div class="bg-[#fff8ef] pb-32">
+    <header class="bg-gradient-to-br from-[#7a2e12] to-[#c25a1c] text-white">
+      <div class="mx-auto max-w-5xl px-4 py-14">
+        <p class="text-sm font-semibold tracking-widest text-white/80 uppercase">Rotisería y pizzería</p>
+        <h1 class="font-display mt-2 text-5xl font-bold">La Tranquera</h1>
+        <p class="mt-3 max-w-lg text-white/85">Comida casera para llevar o con delivery en Toay y Santa Rosa. Armá tu pedido acá y te llega directo a nuestro WhatsApp.</p>
+        <div class="mt-6 flex flex-wrap gap-3 text-sm">
+          <span class="rounded-full bg-white/15 px-3 py-1">Mar a dom · 11 a 14 y 19 a 23 h</span>
+          <span class="rounded-full bg-white/15 px-3 py-1">Delivery $2.000</span>
+          <span class="rounded-full bg-white/15 px-3 py-1">Av. Regimiento 13, Toay</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="sticky top-9 z-30 border-b border-black/5 bg-[#fff8ef]/95 backdrop-blur sm:top-10">
+      <div class="mx-auto flex max-w-5xl gap-2 overflow-x-auto px-4 py-3 text-sm font-medium">
+        {menu.map((c) => <a href={`#${c.categoria}`} class="shrink-0 rounded-full bg-white px-4 py-1.5 ring-1 ring-black/10 hover:bg-[#ffe9d4]">{c.categoria}</a>)}
+      </div>
+    </nav>
+
+    <main class="mx-auto max-w-5xl px-4">
+      {menu.map((c) => (
+        <section id={c.categoria} class="scroll-mt-28 pt-10">
+          <h2 class="font-display text-2xl font-bold text-[#7a2e12]">{c.categoria}</h2>
+          <div class="mt-4 grid gap-3 sm:grid-cols-2">
+            {c.items.map((item) => (
+              <div class="flex items-center justify-between gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5">
+                <div>
+                  <p class="font-semibold">{item.nombre}</p>
+                  {item.nota && <p class="text-sm text-black/55">{item.nota}</p>}
+                  <p class="mt-1 font-semibold text-[#c25a1c]">${fmt(item.precio)}</p>
+                </div>
+                <div class="flex shrink-0 items-center gap-2">
+                  <button data-menos={item.id} class="h-9 w-9 rounded-full bg-black/5 text-lg font-bold hover:bg-black/10" aria-label={`Quitar ${item.nombre}`}>−</button>
+                  <span data-cant={item.id} class="w-5 text-center font-semibold">0</span>
+                  <button data-mas={item.id} class="h-9 w-9 rounded-full bg-[#c25a1c] text-lg font-bold text-white hover:bg-[#7a2e12]" aria-label={`Agregar ${item.nombre}`}>+</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+
+      <section id="pedido" class="mt-12 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+        <h2 class="font-display text-2xl font-bold text-[#7a2e12]">Tu pedido</h2>
+        <ul id="resumen" class="mt-4 space-y-1 text-sm"></ul>
+        <p id="vacio" class="mt-4 text-sm text-black/55">Todavía no agregaste nada.</p>
+        <form id="form-pedido" class="mt-6 grid gap-4 sm:grid-cols-2">
+          <label class="text-sm font-medium">Nombre
+            <input name="nombre" required class="mt-1 w-full rounded-xl border border-black/15 px-3 py-2" />
+          </label>
+          <fieldset class="text-sm font-medium">
+            <legend>Entrega</legend>
+            <div class="mt-2 flex gap-4 font-normal">
+              <label class="flex items-center gap-2"><input type="radio" name="entrega" value="retiro" checked /> Retiro en el local</label>
+              <label class="flex items-center gap-2"><input type="radio" name="entrega" value="delivery" /> Delivery</label>
+            </div>
+          </fieldset>
+          <label class="text-sm font-medium sm:col-span-2">Dirección (si es delivery)
+            <input name="direccion" class="mt-1 w-full rounded-xl border border-black/15 px-3 py-2" />
+          </label>
+          <label class="text-sm font-medium sm:col-span-2">Comentarios
+            <textarea name="comentario" rows="2" class="mt-1 w-full rounded-xl border border-black/15 px-3 py-2" placeholder="Gustos de empanadas, sin cebolla, paga con..."></textarea>
+          </label>
+          <button class="btn-wa sm:col-span-2" type="submit">Enviar pedido por WhatsApp</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <a href="#pedido" id="barra-total" class="fixed inset-x-4 bottom-4 z-40 mx-auto hidden max-w-md items-center justify-between rounded-full bg-[#7a2e12] px-6 py-4 text-white shadow-2xl">
+    <span><span id="items-total">0</span> productos</span>
+    <span class="font-semibold">Ver pedido · $<span id="monto-total">0</span></span>
+  </a>
+
+  <script is:inline define:vars={{ precios, telefono: SITE.whatsapp, envio: 2000 }}>
+    const carrito = {};
+    const fmt = (n) => n.toLocaleString("es-AR");
+
+    function total() {
+      return Object.entries(carrito).reduce((s, [id, c]) => s + precios[id].precio * c, 0);
+    }
+
+    function render() {
+      const cantidad = Object.values(carrito).reduce((a, b) => a + b, 0);
+      document.querySelectorAll("[data-cant]").forEach((el) => (el.textContent = carrito[el.dataset.cant] || 0));
+      document.getElementById("items-total").textContent = cantidad;
+      document.getElementById("monto-total").textContent = fmt(total());
+      document.getElementById("barra-total").classList.toggle("hidden", cantidad === 0);
+      document.getElementById("barra-total").classList.toggle("flex", cantidad > 0);
+      document.getElementById("vacio").classList.toggle("hidden", cantidad > 0);
+      document.getElementById("resumen").innerHTML = Object.entries(carrito)
+        .map(([id, c]) => `<li class="flex justify-between"><span>${c} × ${precios[id].nombre}</span><span>$${fmt(precios[id].precio * c)}</span></li>`)
+        .join("") + (cantidad ? `<li class="flex justify-between border-t border-black/10 pt-2 font-semibold"><span>Total</span><span>$${fmt(total())}</span></li>` : "");
+    }
+
+    document.addEventListener("click", (e) => {
+      const mas = e.target.closest("[data-mas]");
+      const menos = e.target.closest("[data-menos]");
+      if (mas) carrito[mas.dataset.mas] = (carrito[mas.dataset.mas] || 0) + 1;
+      if (menos && carrito[menos.dataset.menos]) {
+        carrito[menos.dataset.menos] -= 1;
+        if (!carrito[menos.dataset.menos]) delete carrito[menos.dataset.menos];
+      }
+      if (mas || menos) render();
+    });
+
+    document.getElementById("form-pedido").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!Object.keys(carrito).length) {
+        alert("Agregá al menos un producto.");
+        return;
+      }
+      const d = new FormData(e.target);
+      const delivery = d.get("entrega") === "delivery";
+      const lineas = Object.entries(carrito).map(([id, c]) => `• ${c} × ${precios[id].nombre} — $${fmt(precios[id].precio * c)}`);
+      const monto = total() + (delivery ? envio : 0);
+      const texto = [
+        "*[DEMO] Pedido para La Tranquera*",
+        ...lineas,
+        delivery ? `• Envío — $${fmt(envio)}` : null,
+        `*Total: $${fmt(monto)}*`,
+        "",
+        `Nombre: ${d.get("nombre")}`,
+        delivery ? `Delivery a: ${d.get("direccion") || "(sin dirección)"}` : "Retiro en el local",
+        d.get("comentario") ? `Comentarios: ${d.get("comentario")}` : null,
+      ].filter((l) => l !== null).join("\n");
+      window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(texto)}`, "_blank");
+    });
+  </script>
+</Base>

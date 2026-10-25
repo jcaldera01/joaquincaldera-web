@@ -1,0 +1,162 @@
+---
+import Base from "../../layouts/Base.astro";
+import DemoBar from "../../components/DemoBar.astro";
+import { SITE } from "../../config";
+
+// En un cliente real, los servicios y los turnos ocupados salen de Supabase,
+// y la seña se cobra con Mercado Pago antes de confirmar.
+const servicios = [
+  { id: "corte", nombre: "Corte", duracion: 45, precio: 12000 },
+  { id: "corte-brushing", nombre: "Corte y brushing", duracion: 60, precio: 18000 },
+  { id: "color", nombre: "Color completo", duracion: 120, precio: 38000 },
+  { id: "mechas", nombre: "Mechas o balayage", duracion: 180, precio: 55000 },
+  { id: "manos", nombre: "Esmaltado semipermanente", duracion: 60, precio: 14000 },
+  { id: "cejas", nombre: "Perfilado de cejas", duracion: 30, precio: 7000 },
+];
+
+const profesionales = ["Cualquiera", "Malena", "Sofía", "Lucas"];
+const horarios = ["09:00", "10:00", "11:00", "12:00", "15:00", "16:00", "17:00", "18:00", "19:00"];
+const fmt = (n: number) => n.toLocaleString("es-AR");
+---
+
+<Base title="Estudio Malva | Peluquería y estética en Toay (demo)" description="Demo de sitio web para peluquería: servicios, precios y turnos online.">
+  <DemoBar rubro="peluquería" />
+
+  <div class="min-h-screen bg-[#fbf6f9] text-[#3a2433]">
+    <header class="mx-auto max-w-5xl px-4 pt-14 pb-10 text-center">
+      <p class="text-sm tracking-[0.3em] text-[#b07aa1] uppercase">Peluquería · Color · Estética</p>
+      <h1 class="font-display mt-3 text-5xl font-bold md:text-6xl">Estudio Malva</h1>
+      <p class="mx-auto mt-4 max-w-md text-[#3a2433]/70">Sacá tu turno en 1 minuto, sin esperar respuesta por mensaje.</p>
+      <a href="#turno" class="btn mt-6 bg-[#3a2433] text-white hover:bg-[#5b3a50]">Reservar turno</a>
+    </header>
+
+    <section class="mx-auto max-w-5xl px-4">
+      <h2 class="font-display text-2xl font-bold">Servicios</h2>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+        {servicios.map((s) => (
+          <div class="rounded-2xl bg-white p-5 ring-1 ring-[#3a2433]/10">
+            <p class="font-semibold">{s.nombre}</p>
+            <p class="mt-1 text-sm text-[#3a2433]/60">{s.duracion} min</p>
+            <p class="mt-2 font-semibold text-[#b07aa1]">${fmt(s.precio)}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section id="turno" class="mx-auto mt-14 max-w-3xl scroll-mt-16 px-4 pb-20">
+      <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-[#3a2433]/10 md:p-8">
+        <h2 class="font-display text-2xl font-bold">Reservá tu turno</h2>
+        <form id="form-turno" class="mt-6 space-y-6">
+          <div>
+            <p class="text-sm font-semibold">1. ¿Qué te hacés?</p>
+            <select name="servicio" required class="mt-2 w-full rounded-xl border border-[#3a2433]/20 px-3 py-2">
+              {servicios.map((s) => <option value={s.id}>{s.nombre} · ${fmt(s.precio)}</option>)}
+            </select>
+          </div>
+          <div>
+            <p class="text-sm font-semibold">2. ¿Con quién?</p>
+            <div class="mt-2 flex flex-wrap gap-2">
+              {profesionales.map((p, i) => (
+                <label class="cursor-pointer">
+                  <input type="radio" name="profesional" value={p} checked={i === 0} class="peer sr-only" />
+                  <span class="block rounded-full px-4 py-2 text-sm ring-1 ring-[#3a2433]/20 peer-checked:bg-[#3a2433] peer-checked:text-white">{p}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p class="text-sm font-semibold">3. ¿Qué día?</p>
+            <div id="dias" class="mt-2 flex gap-2 overflow-x-auto pb-1"></div>
+          </div>
+          <div>
+            <p class="text-sm font-semibold">4. ¿A qué hora?</p>
+            <div id="horas" class="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5"></div>
+          </div>
+          <label class="block text-sm font-semibold">Tu nombre
+            <input name="nombre" required class="mt-2 w-full rounded-xl border border-[#3a2433]/20 px-3 py-2 font-normal" />
+          </label>
+          <p class="rounded-xl bg-[#f3e6ee] p-3 text-sm">En la versión real, los horarios ocupados se bloquean solos y podés pagar una seña con Mercado Pago para confirmar.</p>
+          <button type="submit" class="btn-wa w-full">Confirmar turno por WhatsApp</button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="border-t border-[#3a2433]/10 py-8 text-center text-sm text-[#3a2433]/60">
+      Estudio Malva · San Martín 450, Toay · Mar a sáb de 9 a 20 h
+    </footer>
+  </div>
+
+  <script is:inline define:vars={{ servicios, horarios, telefono: SITE.whatsapp }}>
+    const nombresDia = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"];
+    let diaElegido = null;
+    let horaElegida = null;
+
+    // Simula turnos ocupados de forma fija según el día, para que la demo se vea real.
+    const ocupado = (fecha, hora) => (fecha.getDate() * 7 + hora.length + parseInt(hora)) % 4 === 0;
+
+    function dias() {
+      const cont = document.getElementById("dias");
+      const hoy = new Date();
+      const lista = [];
+      for (let i = 1; lista.length < 10; i++) {
+        const d = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + i);
+        if (d.getDay() !== 0 && d.getDay() !== 1) lista.push(d);
+      }
+      cont.innerHTML = lista
+        .map((d, i) => `<button type="button" data-dia="${i}" class="shrink-0 rounded-2xl px-4 py-2 text-center text-sm ring-1 ring-[#3a2433]/20"><span class="block text-xs uppercase">${nombresDia[d.getDay()]}</span><span class="block text-lg font-semibold">${d.getDate()}</span></button>`)
+        .join("");
+      cont.querySelectorAll("[data-dia]").forEach((b) =>
+        b.addEventListener("click", () => {
+          diaElegido = lista[b.dataset.dia];
+          horaElegida = null;
+          cont.querySelectorAll("[data-dia]").forEach((x) => x.classList.remove("bg-[#3a2433]", "text-white"));
+          b.classList.add("bg-[#3a2433]", "text-white");
+          horas();
+        })
+      );
+    }
+
+    function horas() {
+      const cont = document.getElementById("horas");
+      if (!diaElegido) {
+        cont.innerHTML = '<p class="col-span-full text-sm text-[#3a2433]/60">Elegí un día primero.</p>';
+        return;
+      }
+      cont.innerHTML = horarios
+        .map((h) => {
+          const lleno = ocupado(diaElegido, h);
+          return `<button type="button" data-hora="${h}" ${lleno ? "disabled" : ""} class="rounded-xl py-2 text-sm ring-1 ring-[#3a2433]/20 ${lleno ? "cursor-not-allowed line-through opacity-40" : "hover:bg-[#f3e6ee]"}">${h}</button>`;
+        })
+        .join("");
+      cont.querySelectorAll("[data-hora]:not([disabled])").forEach((b) =>
+        b.addEventListener("click", () => {
+          horaElegida = b.dataset.hora;
+          cont.querySelectorAll("[data-hora]").forEach((x) => x.classList.remove("bg-[#3a2433]", "text-white"));
+          b.classList.add("bg-[#3a2433]", "text-white");
+        })
+      );
+    }
+
+    document.getElementById("form-turno").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!diaElegido || !horaElegida) {
+        alert("Elegí día y horario.");
+        return;
+      }
+      const d = new FormData(e.target);
+      const s = servicios.find((x) => x.id === d.get("servicio"));
+      const fecha = diaElegido.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" });
+      const texto = [
+        "*[DEMO] Turno en Estudio Malva*",
+        `Servicio: ${s.nombre} ($${s.precio.toLocaleString("es-AR")})`,
+        `Profesional: ${d.get("profesional")}`,
+        `Día: ${fecha} a las ${horaElegida} h`,
+        `Nombre: ${d.get("nombre")}`,
+      ].join("\n");
+      window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(texto)}`, "_blank");
+    });
+
+    dias();
+    horas();
+  </script>
+</Base>

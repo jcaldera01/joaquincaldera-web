@@ -1,0 +1,286 @@
+---
+import Base from "../layouts/Base.astro";
+import { SITE, waLink } from "../config";
+
+const contacto = waLink("Hola Joaquín, quiero consultar por una página web para mi negocio.");
+
+const problemas = [
+  {
+    titulo: "Te preguntan \"¿precio?\" todo el día",
+    texto: "Respondés lo mismo por mensaje privado una y otra vez. Con una web, el cliente ve todo y te escribe con el pedido ya armado.",
+  },
+  {
+    titulo: "En Google no aparecés",
+    texto: "Quien busca \"rotisería en Toay\" o \"peluquería en Santa Rosa\" no entra a Instagram: entra a Google Maps y a los sitios web.",
+  },
+  {
+    titulo: "Dependés del algoritmo",
+    texto: "Si Instagram baja tu alcance o te bloquea la cuenta, te quedás sin vidriera. Tu web es tuya y siempre está.",
+  },
+];
+
+const demos = [
+  {
+    href: "/demos/rotiseria",
+    rubro: "Rotisería y pizzería",
+    nombre: "La Tranquera",
+    texto: "Menú con precios y carrito que manda el pedido armado por WhatsApp, con delivery o retiro.",
+    color: "bg-arena-500",
+  },
+  {
+    href: "/demos/peluqueria",
+    rubro: "Peluquería y estética",
+    nombre: "Estudio Malva",
+    texto: "Turnos online: elegís servicio, profesional, día y hora. Se puede cobrar seña con Mercado Pago.",
+    color: "bg-[#b07aa1]",
+  },
+  {
+    href: "/demos/veterinaria",
+    rubro: "Veterinaria y pet shop",
+    nombre: "El Caldén",
+    texto: "Servicios, guardia, catálogo del pet shop con buscador y consulta directa por cada producto.",
+    color: "bg-monte-500",
+  },
+];
+
+const planes = [
+  {
+    nombre: "Vidriera",
+    para: "Para que te encuentren",
+    items: ["Una página con todo lo importante", "Horarios, mapa y botón de WhatsApp", "Tu Instagram integrado", "Ficha de Google Maps optimizada"],
+  },
+  {
+    nombre: "Catálogo",
+    para: "Para mostrar lo que vendés",
+    items: ["Todo lo de Vidriera", "Menú o catálogo con precios", "Panel para cambiar precios y fotos", "Posicionamiento en Google local"],
+    destacado: true,
+  },
+  {
+    nombre: "Ventas",
+    para: "Para vender o dar turnos online",
+    items: ["Todo lo de Catálogo", "Pedidos o turnos online", "Cobro con Mercado Pago", "Panel de pedidos y turnos"],
+  },
+];
+
+const pasos = [
+  { titulo: "Charlamos", texto: "Te muestro cómo se vería tu negocio con una demo armada con tus fotos y productos." },
+  { titulo: "Lo armo", texto: "En una o dos semanas tenés tu sitio listo para revisar desde el celular." },
+  { titulo: "Lo publicamos", texto: "Con tu dominio .com.ar a tu nombre y tu ficha de Google Maps al día." },
+  { titulo: "Me ocupo yo", texto: "Cambios de precios, fotos y horarios incluidos en el abono mensual. Me escribís y listo." },
+];
+
+const preguntas = [
+  {
+    p: "¿Tengo que pagar todo de entrada?",
+    r: "No. Hay una opción sin pago inicial, solo con un abono mensual. Si preferís, también podés pagar el armado y un abono más bajo.",
+  },
+  {
+    p: "¿Qué incluye el abono mensual?",
+    r: "Dominio, hosting, seguridad, copias de respaldo, los cambios que necesites cada mes y un resumen de cuánta gente visitó tu web y te escribió por WhatsApp.",
+  },
+  {
+    p: "Ya tengo Instagram, ¿para qué quiero una web?",
+    r: "La web no reemplaza a Instagram: lo potencia. Instagram te trae gente; la web te pone en Google y convierte esas visitas en pedidos.",
+  },
+  {
+    p: "¿El dominio es mío?",
+    r: "Sí. El dominio .com.ar se registra a nombre de tu negocio. Si algún día dejás de trabajar conmigo, te lo llevás.",
+  },
+  {
+    p: "¿Puedo cobrar online?",
+    r: "Sí, con Mercado Pago. Tus clientes pagan con tarjeta, débito o dinero en cuenta, y la plata te llega directo a tu cuenta.",
+  },
+  {
+    p: "¿Y un bot de WhatsApp?",
+    r: "Puedo sumar un asistente que responde precios, horarios y toma pedidos o turnos las 24 horas, y te pasa la conversación cuando hace falta una persona.",
+  },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: `${SITE.name} — Diseño web`,
+  description: SITE.tagline,
+  areaServed: ["Toay", "Santa Rosa", "La Pampa"],
+  address: { "@type": "PostalAddress", addressLocality: "Toay", addressRegion: "La Pampa", addressCountry: "AR" },
+  url: Astro.site?.toString(),
+};
+---
+
+<Base
+  title={`${SITE.name} | Páginas web para comercios de Toay y Santa Rosa`}
+  description="Páginas web para comercios de Toay y Santa Rosa: aparecé en Google, mostrá tus precios y recibí pedidos y turnos por WhatsApp. Te armo una demo sin compromiso."
+  jsonLd={jsonLd}
+>
+  <header class="sticky top-0 z-40 border-b border-monte-900/10 bg-arena-50/90 backdrop-blur">
+    <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+      <a href="/" class="font-display text-xl font-bold text-monte-700">{SITE.name}</a>
+      <div class="hidden items-center gap-6 text-sm font-medium md:flex">
+        <a href="#demos" class="hover:text-monte-500">Demos</a>
+        <a href="#planes" class="hover:text-monte-500">Planes</a>
+        <a href="#como-trabajo" class="hover:text-monte-500">Cómo trabajo</a>
+        <a href="#preguntas" class="hover:text-monte-500">Preguntas</a>
+      </div>
+      <a href={contacto} target="_blank" rel="noopener" class="btn-wa px-4 py-2">WhatsApp</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="relative overflow-hidden">
+      <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 md:grid-cols-2 md:py-24">
+        <div>
+          <p class="mb-4 inline-block rounded-full bg-monte-100 px-3 py-1 text-sm font-medium text-monte-700">
+            Desde {SITE.city}
+          </p>
+          <h1 class="font-display text-4xl leading-tight font-bold text-balance md:text-5xl">
+            Tu comercio ya tiene clientes en Instagram. Ahora, que te encuentren en Google y te pidan sin vueltas.
+          </h1>
+          <p class="mt-5 max-w-xl text-lg text-monte-900/75">
+            Armo páginas web para negocios de la zona: rápidas, lindas en el celular y conectadas a tu WhatsApp. Yo me ocupo de todo, vos atendés tu negocio.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#demos" class="btn-primary">Ver ejemplos</a>
+            <a href={contacto} target="_blank" rel="noopener" class="btn-ghost">Pedí tu demo gratis</a>
+          </div>
+        </div>
+        <div class="relative mx-auto w-full max-w-sm" aria-hidden="true">
+          <div class="absolute -inset-6 rounded-[3rem] bg-arena-300/50 blur-2xl"></div>
+          <div class="relative rounded-[2.5rem] border-8 border-monte-900 bg-white p-4 shadow-2xl">
+            <div class="mb-3 h-36 rounded-2xl bg-gradient-to-br from-arena-500 to-arena-700"></div>
+            <div class="mb-2 h-4 w-2/3 rounded bg-monte-900/80"></div>
+            <div class="mb-4 h-3 w-1/2 rounded bg-monte-900/20"></div>
+            <div class="space-y-2">
+              {["Empanadas x12", "Pizza muzzarella", "Milanesa con fritas"].map((item) => (
+                <div class="flex items-center justify-between rounded-xl bg-arena-50 px-3 py-2 text-xs">
+                  <span class="font-medium">{item}</span>
+                  <span class="rounded-full bg-monte-700 px-2 py-0.5 text-arena-50">+</span>
+                </div>
+              ))}
+            </div>
+            <div class="mt-4 rounded-full bg-wa py-2 text-center text-xs font-semibold">Enviar pedido por WhatsApp</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-monte-900 text-arena-50">
+      <div class="mx-auto max-w-6xl px-4 py-16">
+        <h2 class="font-display text-3xl font-bold">¿Te suena?</h2>
+        <div class="mt-8 grid gap-6 md:grid-cols-3">
+          {problemas.map((p) => (
+            <div class="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
+              <h3 class="text-lg font-semibold">{p.titulo}</h3>
+              <p class="mt-2 text-arena-50/75">{p.texto}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="demos" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-20">
+      <h2 class="font-display text-3xl font-bold">Mirá cómo puede quedar tu negocio</h2>
+      <p class="mt-3 max-w-2xl text-monte-900/75">Tres ejemplos para rubros de la zona. Abrilos desde el celular y probá hacer un pedido o sacar un turno.</p>
+      <div class="mt-10 grid gap-6 md:grid-cols-3">
+        {demos.map((d) => (
+          <a href={d.href} class="group overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-monte-900/10 transition hover:-translate-y-1 hover:shadow-lg">
+            <div class={`flex h-40 items-end p-5 ${d.color}`}>
+              <span class="font-display text-3xl font-bold text-white drop-shadow">{d.nombre}</span>
+            </div>
+            <div class="p-5">
+              <p class="text-sm font-semibold text-monte-500">{d.rubro}</p>
+              <p class="mt-2 text-monte-900/75">{d.texto}</p>
+              <p class="mt-4 font-semibold text-monte-700 group-hover:underline">Ver demo →</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section id="planes" class="scroll-mt-20 bg-arena-100">
+      <div class="mx-auto max-w-6xl px-4 py-20">
+        <h2 class="font-display text-3xl font-bold">Planes</h2>
+        <p class="mt-3 max-w-2xl text-monte-900/75">Todos incluyen dominio, hosting, seguridad y cambios mensuales. Hay opción sin pago inicial.</p>
+        <div class="mt-10 grid gap-6 md:grid-cols-3">
+          {planes.map((plan) => (
+            <div class={`flex flex-col rounded-3xl p-7 ${plan.destacado ? "bg-monte-700 text-arena-50 shadow-xl" : "bg-white ring-1 ring-monte-900/10"}`}>
+              {plan.destacado && <span class="mb-3 self-start rounded-full bg-arena-500 px-3 py-1 text-xs font-semibold text-monte-900">El más elegido</span>}
+              <h3 class="font-display text-2xl font-bold">{plan.nombre}</h3>
+              <p class={plan.destacado ? "text-arena-50/80" : "text-monte-900/70"}>{plan.para}</p>
+              <ul class="mt-6 flex-1 space-y-3 text-sm">
+                {plan.items.map((i) => (
+                  <li class="flex gap-2">
+                    <span class={plan.destacado ? "text-arena-300" : "text-monte-500"}>✓</span>
+                    {i}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={waLink(`Hola Joaquín, quiero consultar por el plan ${plan.nombre}.`)}
+                target="_blank"
+                rel="noopener"
+                class={`mt-8 ${plan.destacado ? "btn bg-arena-50 text-monte-900 hover:bg-white" : "btn-primary"}`}
+              >Consultar precio</a>
+            </div>
+          ))}
+        </div>
+        <div class="mt-6 rounded-3xl bg-white p-6 ring-1 ring-monte-900/10 md:flex md:items-center md:justify-between">
+          <div>
+            <h3 class="text-lg font-semibold">Extra: asistente de WhatsApp</h3>
+            <p class="text-monte-900/70">Responde precios y horarios, toma pedidos y turnos las 24 horas, y te pasa la charla cuando hace falta.</p>
+          </div>
+          <a href={waLink("Hola Joaquín, quiero saber más del asistente de WhatsApp.")} target="_blank" rel="noopener" class="btn-ghost mt-4 shrink-0 md:mt-0">Quiero saber más</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="como-trabajo" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-20">
+      <h2 class="font-display text-3xl font-bold">Cómo trabajo</h2>
+      <ol class="mt-10 grid gap-6 md:grid-cols-4">
+        {pasos.map((paso, i) => (
+          <li class="rounded-3xl bg-white p-6 ring-1 ring-monte-900/10">
+            <span class="font-display text-4xl font-bold text-arena-500">{i + 1}</span>
+            <h3 class="mt-2 text-lg font-semibold">{paso.titulo}</h3>
+            <p class="mt-2 text-sm text-monte-900/75">{paso.texto}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="mt-10 grid gap-4 text-sm md:grid-cols-3">
+        <p class="rounded-2xl bg-monte-100 p-4"><strong>Soy de Toay.</strong> Te visito en tu local y hablamos cara a cara.</p>
+        <p class="rounded-2xl bg-monte-100 p-4"><strong>Te respondo yo.</strong> Sin tickets ni call centers: me escribís por WhatsApp.</p>
+        <p class="rounded-2xl bg-monte-100 p-4"><strong>Lo tuyo es tuyo.</strong> El dominio queda a nombre de tu negocio.</p>
+      </div>
+    </section>
+
+    <section id="preguntas" class="scroll-mt-20 bg-white">
+      <div class="mx-auto max-w-3xl px-4 py-20">
+        <h2 class="font-display text-3xl font-bold">Preguntas frecuentes</h2>
+        <div class="mt-8 divide-y divide-monte-900/10">
+          {preguntas.map((q) => (
+            <details class="group py-4">
+              <summary class="flex cursor-pointer list-none items-center justify-between font-semibold">
+                {q.p}
+                <span class="ml-4 text-monte-500 transition group-open:rotate-45">+</span>
+              </summary>
+              <p class="mt-3 text-monte-900/75">{q.r}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-monte-700 text-arena-50">
+      <div class="mx-auto max-w-4xl px-4 py-20 text-center">
+        <h2 class="font-display text-3xl font-bold md:text-4xl">¿Te armo una demo de tu negocio?</h2>
+        <p class="mx-auto mt-4 max-w-xl text-arena-50/80">Sin compromiso. Te muestro cómo se vería tu web con tus fotos y tus productos, y después decidís.</p>
+        <a href={contacto} target="_blank" rel="noopener" class="btn-wa mt-8 px-8 py-4 text-base">Escribime por WhatsApp</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-monte-900 text-arena-50/70">
+    <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm md:flex-row md:justify-between">
+      <p>© {new Date().getFullYear()} {SITE.name} · {SITE.city}</p>
+      <p>{SITE.tagline}</p>
+    </div>
+  </footer>
+</Base>

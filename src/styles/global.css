@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+
+  --color-monte-50: #f3f7f3;
+  --color-monte-100: #e1ece2;
+  --color-monte-200: #c3d9c6;
+  --color-monte-500: #3f7a52;
+  --color-monte-700: #24503a;
+  --color-monte-900: #142b20;
+
+  --color-arena-50: #fbf7f0;
+  --color-arena-100: #f4e9d8;
+  --color-arena-300: #e2c79c;
+  --color-arena-500: #c9954d;
+  --color-arena-700: #8f6224;
+
+  --color-wa: #25d366;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-arena-50 text-monte-900 font-sans antialiased;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition;
+}
+@utility btn-primary {
+  @apply btn bg-monte-700 text-arena-50 hover:bg-monte-900;
+}
+@utility btn-wa {
+  @apply btn bg-wa text-monte-900 hover:brightness-95;
+}
+@utility btn-ghost {
+  @apply btn border border-monte-700/30 text-monte-700 hover:bg-monte-100;
+}

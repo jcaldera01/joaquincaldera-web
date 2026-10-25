@@ -1,0 +1,26 @@
+---
+import { SITE, waLink } from "../config";
+
+interface Props {
+  rubro: string;
+}
+
+const { rubro } = Astro.props;
+---
+
+<div class="sticky top-0 z-50 h-9 bg-monte-900 text-arena-50 sm:h-10">
+  <div class="mx-auto flex h-full max-w-6xl items-center justify-between gap-3 px-4 text-xs sm:text-sm">
+    <p class="truncate">
+      <span class="mr-1.5 rounded bg-arena-500 px-1.5 py-0.5 font-semibold text-monte-900">DEMO</span>
+      <span class="hidden sm:inline">Sitio de ejemplo para una {rubro}, hecho por{" "}</span>
+      <span class="sm:hidden">Hecho por{" "}</span>
+      <a href="/" class="font-semibold underline underline-offset-2">{SITE.name}</a>
+    </p>
+    <a
+      href={waLink(`Hola Joaquín, vi la demo de ${rubro} y quiero una página así para mi negocio.`)}
+      class="shrink-0 font-semibold text-wa hover:underline"
+      target="_blank"
+      rel="noopener">Quiero una así →</a
+    >
+  </div>
+</div>
