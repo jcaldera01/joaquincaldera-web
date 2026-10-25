@@ -22,12 +22,14 @@ npm run build    # genera el sitio en dist/
 
 El número de WhatsApp y los datos de contacto están en `src/config.ts`.
 
-## Publicación en Cloudflare
+## Publicación en Cloudflare Pages
 
-Cloudflare → Workers & Pages → Crear → Importar un repositorio de GitHub → elegir este repo.
+Cloudflare → Workers & Pages → Crear → pestaña Pages → Conectar a Git → elegir este repo.
 
+- Nombre del proyecto: `joaquincaldera` (queda en `joaquincaldera.pages.dev`)
+- Preset de framework: Astro
 - Comando de build: `npm run build`
 - Carpeta de salida: `dist`
-- Variable de entorno: `NODE_VERSION` = `24` (si Cloudflare no toma `.node-version`)
+- Variable de entorno: `NODE_VERSION` = `24`
 
 Cada push a `main` vuelve a publicar el sitio solo.
