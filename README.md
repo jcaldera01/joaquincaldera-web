@@ -22,11 +22,12 @@ npm run build    # genera el sitio en dist/
 
 El número de WhatsApp y los datos de contacto están en `src/config.ts`.
 
-## Publicación en Cloudflare Workers
+## Publicación en Cloudflare Pages
 
-El Worker `joaquincaldera` está conectado a este repo con Workers Builds: cada push a `main` compila y publica solo.
+Proyecto de Pages `joaquincaldera` conectado a este repo: cada push a `main` compila y publica solo.
 
-- Dirección: https://joaquincaldera.jcaldera2001.workers.dev
+- Dirección: https://joaquincaldera.pages.dev
+- Preset de framework: Astro
 - Comando de build: `npm run build`
-- Comando de deploy: `npx wrangler deploy` (lee `wrangler.jsonc`)
-- Node: lo toma de `.node-version` (24)
+- Carpeta de salida: `dist`
+- Variable de entorno: `NODE_VERSION` = `24`
