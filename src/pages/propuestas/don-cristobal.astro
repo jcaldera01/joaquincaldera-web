@@ -3,8 +3,12 @@ import Base from "../../layouts/Base.astro";
 import PropuestaBar from "../../components/PropuestaBar.astro";
 import ReservaMesa from "../../components/ReservaMesa.astro";
 import Horarios from "../../components/Horarios.astro";
+import Foto from "../../components/Foto.astro";
+import Galeria from "../../components/Galeria.astro";
+import { F } from "../../fotos";
 
-// Dirección, horarios y calificación tomados de su perfil público de Google. Carta y precios de ejemplo.
+// Dirección, horarios, calificación y foto del frente tomados de su perfil público de Google.
+// Carta, precios y demás fotos de ejemplo.
 const horarios: [string, string][][] = [
   [["20:00", "00:00"]],
   [],
@@ -21,11 +25,19 @@ const turnos = [
 ];
 
 const carta = [
-  { categoria: "Parrilla", items: [["Bife de chorizo", 21000], ["Vacío", 19000], ["Parrillada para dos", 38000]] },
-  { categoria: "Pastas caseras", items: [["Sorrentinos de jamón y queso", 14500], ["Ñoquis de papa", 12000], ["Lasaña de carne", 15500]] },
-  { categoria: "Minutas", items: [["Milanesa napolitana con fritas", 16000], ["Suprema a caballo", 15000]] },
-  { categoria: "Postres", items: [["Flan casero con dulce de leche", 6000], ["Panqueques con dulce de leche", 6500]] },
+  { categoria: "Parrilla", img: F.parrilla, items: [["Bife de chorizo", 21000], ["Vacío", 19000], ["Parrillada para dos", 38000]] },
+  { categoria: "Pastas caseras", img: F.ravioles, items: [["Sorrentinos de jamón y queso", 14500], ["Ñoquis de papa", 12000], ["Lasaña de carne", 15500]] },
+  { categoria: "Minutas", img: F.milanesa, items: [["Milanesa napolitana con fritas", 16000], ["Suprema a caballo", 15000]] },
+  { categoria: "Postres", img: F.flan, items: [["Flan casero con dulce de leche", 6000], ["Panqueques con dulce de leche", 6500]] },
 ] as const;
+
+const galeria = [
+  { src: "/propuestas/don-cristobal/fachada.jpg", alt: "Frente del Bodegón Don Cristóbal, con su cartel" },
+  { src: F.restoMadera, alt: "Salón con mesas de madera" },
+  { src: F.parrillaFuego, alt: "Parrilla con carnes" },
+  { src: F.pastaFresca, alt: "Pasta fresca casera" },
+  { src: F.lasagna, alt: "Lasaña gratinada" },
+];
 
 const fmt = (n: number) => n.toLocaleString("es-AR");
 ---
@@ -34,8 +46,10 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
   <PropuestaBar negocio="Bodegón Don Cristóbal" />
 
   <div class="bg-[#f8f1e7] text-[#2a1810]" style="--accent:#a3322a;--accent-dark:#5a1d18;--soft:#f1e3d3">
-    <header class="relative bg-[#5a1d18] text-[#f8f1e7]">
-      <div class="mx-auto max-w-5xl px-4 py-20 text-center">
+    <header class="relative overflow-hidden bg-[#5a1d18] text-[#f8f1e7]">
+      <Foto src={F.bodegon} alt="" ancho={1600} eager class="absolute inset-0 h-full w-full object-cover opacity-40" />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#5a1d18]/70 via-[#5a1d18]/80 to-[#5a1d18]"></div>
+      <div class="relative mx-auto max-w-5xl px-4 py-24 text-center md:py-28">
         <p class="text-sm tracking-[0.3em] text-[#e2b77a] uppercase">Bodegón · Santa Rosa</p>
         <h1 class="font-display mt-3 text-5xl font-bold md:text-7xl">Don Cristóbal</h1>
         <p class="mx-auto mt-4 max-w-md text-[#f8f1e7]/80">Cocina de bodegón: parrilla, pastas caseras y platos abundantes, como siempre.</p>
@@ -53,6 +67,9 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
       <div class="mt-10 grid gap-10 md:grid-cols-2">
         {carta.map((c) => (
           <div>
+            <div class="mb-4 aspect-[16/9] overflow-hidden rounded-2xl bg-(--soft)">
+              <Foto src={c.img} alt={c.categoria} ancho={700} class="h-full w-full object-cover" />
+            </div>
             <h3 class="font-display border-b-2 border-[#a3322a] pb-2 text-xl font-bold text-[#5a1d18]">{c.categoria}</h3>
             <ul class="mt-3 space-y-2">
               {c.items.map(([plato, precio]) => (
@@ -65,6 +82,13 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
             </ul>
           </div>
         ))}
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-5xl px-4 pb-14">
+      <h2 class="font-display text-center text-3xl font-bold">El bodegón</h2>
+      <div class="mt-8">
+        <Galeria fotos={galeria} nota="La foto del frente es de su ficha de Google; las demás son de ejemplo. En el sitio real van fotos del salón y de sus platos." />
       </div>
     </section>
 

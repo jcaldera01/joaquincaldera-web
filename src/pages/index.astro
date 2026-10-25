@@ -1,6 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
+import Foto from "../components/Foto.astro";
 import { SITE, waLink } from "../config";
+import { F } from "../fotos";
 
 const contacto = waLink("Hola Joaquín, quiero consultar por una página web para mi negocio.");
 
@@ -25,22 +27,31 @@ const demos = [
     rubro: "Rotisería y pizzería",
     nombre: "La Tranquera",
     texto: "Menú con precios y carrito que manda el pedido armado por WhatsApp, con delivery o retiro.",
-    color: "bg-arena-500",
+    img: F.empanadas,
   },
   {
     href: "/demos/peluqueria",
     rubro: "Peluquería y estética",
     nombre: "Estudio Malva",
     texto: "Turnos online: elegís servicio, profesional, día y hora. Se puede cobrar seña con Mercado Pago.",
-    color: "bg-[#b07aa1]",
+    img: F.salon,
   },
   {
     href: "/demos/veterinaria",
     rubro: "Veterinaria y pet shop",
     nombre: "El Caldén",
     texto: "Servicios, guardia, catálogo del pet shop con buscador y consulta directa por cada producto.",
-    color: "bg-monte-500",
+    img: F.vetGato,
   },
+];
+
+const rubros = [
+  { nombre: "Rotiserías y comidas", img: F.empanadasDocena },
+  { nombre: "Peluquerías y estética", img: F.corte },
+  { nombre: "Veterinarias y pet shops", img: F.cachorro },
+  { nombre: "Gimnasios", img: F.gimnasio },
+  { nombre: "Bares y restaurantes", img: F.bodegon },
+  { nombre: "Camping y pesca", img: F.carpa },
 ];
 
 const planes = [
@@ -168,23 +179,41 @@ const jsonLd = {
             <a href={contacto} target="_blank" rel="noopener" class="btn-ghost">Pedí tu demo gratis</a>
           </div>
         </div>
-        <div class="relative mx-auto w-full max-w-sm" aria-hidden="true">
+        <div class="relative mx-auto w-full max-w-md pb-10" aria-hidden="true">
           <div class="absolute -inset-6 rounded-[3rem] bg-arena-300/50 blur-2xl"></div>
-          <div class="relative rounded-[2.5rem] border-8 border-monte-900 bg-white p-4 shadow-2xl">
-            <div class="mb-3 h-36 rounded-2xl bg-gradient-to-br from-arena-500 to-arena-700"></div>
-            <div class="mb-2 h-4 w-2/3 rounded bg-monte-900/80"></div>
-            <div class="mb-4 h-3 w-1/2 rounded bg-monte-900/20"></div>
-            <div class="space-y-2">
+          <div class="relative ml-auto aspect-[4/5] w-[78%] overflow-hidden rounded-[2rem] bg-arena-300 shadow-xl">
+            <Foto src={F.duenoCelular} alt="" ancho={900} eager class="h-full w-full object-cover" />
+          </div>
+          <div class="absolute bottom-0 left-0 w-[56%] rounded-[2rem] border-[6px] border-monte-900 bg-white p-3 shadow-2xl">
+            <div class="mb-2 h-20 overflow-hidden rounded-xl bg-gradient-to-br from-arena-500 to-arena-700 sm:h-24">
+              <Foto src={F.empanadas} alt="" ancho={500} eager class="h-full w-full object-cover" />
+            </div>
+            <div class="mb-1.5 h-3 w-2/3 rounded bg-monte-900/80"></div>
+            <div class="mb-3 h-2 w-1/2 rounded bg-monte-900/20"></div>
+            <div class="space-y-1.5">
               {["Empanadas x12", "Pizza muzzarella", "Milanesa con fritas"].map((item) => (
-                <div class="flex items-center justify-between rounded-xl bg-arena-50 px-3 py-2 text-xs">
-                  <span class="font-medium">{item}</span>
-                  <span class="rounded-full bg-monte-700 px-2 py-0.5 text-arena-50">+</span>
+                <div class="flex items-center justify-between gap-1 rounded-lg bg-arena-50 px-2 py-1.5 text-[10px] sm:text-xs">
+                  <span class="truncate font-medium">{item}</span>
+                  <span class="rounded-full bg-monte-700 px-1.5 text-arena-50">+</span>
                 </div>
               ))}
             </div>
-            <div class="mt-4 rounded-full bg-wa py-2 text-center text-xs font-semibold">Enviar pedido por WhatsApp</div>
+            <div class="mt-3 rounded-full bg-wa py-1.5 text-center text-[10px] font-semibold sm:text-xs">Enviar pedido por WhatsApp</div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-6xl px-4 pb-16">
+      <p class="text-sm font-semibold tracking-wider text-monte-500 uppercase">Para todo tipo de comercio</p>
+      <div class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+        {rubros.map((r) => (
+          <div class="relative flex h-32 items-end overflow-hidden rounded-2xl bg-monte-700 p-3 md:h-40">
+            <Foto src={r.img} alt="" ancho={400} class="absolute inset-0 h-full w-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-monte-900/85 via-monte-900/20 to-transparent"></div>
+            <span class="relative text-sm leading-tight font-semibold text-white">{r.nombre}</span>
+          </div>
+        ))}
       </div>
     </section>
 
@@ -208,8 +237,10 @@ const jsonLd = {
       <div class="mt-10 grid gap-6 md:grid-cols-3">
         {demos.map((d) => (
           <a href={d.href} class="group overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-monte-900/10 transition hover:-translate-y-1 hover:shadow-lg">
-            <div class={`flex h-40 items-end p-5 ${d.color}`}>
-              <span class="font-display text-3xl font-bold text-white drop-shadow">{d.nombre}</span>
+            <div class="relative flex h-44 items-end overflow-hidden bg-monte-700 p-5">
+              <Foto src={d.img} alt="" ancho={700} class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+              <span class="font-display relative text-3xl font-bold text-white">{d.nombre}</span>
             </div>
             <div class="p-5">
               <p class="text-sm font-semibold text-monte-500">{d.rubro}</p>
@@ -313,10 +344,15 @@ const jsonLd = {
           </li>
         ))}
       </ol>
-      <div class="mt-10 grid gap-4 text-sm md:grid-cols-3">
-        <p class="rounded-2xl bg-monte-100 p-4"><strong>Soy de Toay.</strong> Te visito en tu local y hablamos cara a cara.</p>
-        <p class="rounded-2xl bg-monte-100 p-4"><strong>Te respondo yo.</strong> Sin tickets ni call centers: me escribís por WhatsApp.</p>
-        <p class="rounded-2xl bg-monte-100 p-4"><strong>Lo tuyo es tuyo.</strong> El dominio queda a nombre de tu negocio.</p>
+      <div class="mt-10 grid items-center gap-6 md:grid-cols-2">
+        <div class="h-64 overflow-hidden rounded-3xl bg-monte-100 md:h-80">
+          <Foto src={F.mostrador} alt="Charla con el dueño de un comercio en su mostrador" ancho={1000} class="h-full w-full object-cover" />
+        </div>
+        <div class="grid gap-4 text-sm">
+          <p class="rounded-2xl bg-monte-100 p-4"><strong>Soy de Toay.</strong> Te visito en tu local y hablamos cara a cara.</p>
+          <p class="rounded-2xl bg-monte-100 p-4"><strong>Te respondo yo.</strong> Sin tickets ni call centers: me escribís por WhatsApp.</p>
+          <p class="rounded-2xl bg-monte-100 p-4"><strong>Lo tuyo es tuyo.</strong> El dominio queda a nombre de tu negocio.</p>
+        </div>
       </div>
     </section>
 
@@ -337,8 +373,10 @@ const jsonLd = {
       </div>
     </section>
 
-    <section class="bg-monte-700 text-arena-50">
-      <div class="mx-auto max-w-4xl px-4 py-20 text-center">
+    <section class="relative overflow-hidden bg-monte-700 text-arena-50">
+      <Foto src={F.duenaLocal} alt="" ancho={1600} class="absolute inset-0 h-full w-full object-cover opacity-30" />
+      <div class="absolute inset-0 bg-monte-700/70"></div>
+      <div class="relative mx-auto max-w-4xl px-4 py-24 text-center">
         <h2 class="font-display text-3xl font-bold md:text-4xl">¿Te armo una demo de tu negocio?</h2>
         <p class="mx-auto mt-4 max-w-xl text-arena-50/80">Sin compromiso. Te muestro cómo se vería tu web con tus fotos y tus productos, y después decidís.</p>
         <a href={contacto} target="_blank" rel="noopener" class="btn-wa mt-8 px-8 py-4 text-base">Escribime por WhatsApp</a>

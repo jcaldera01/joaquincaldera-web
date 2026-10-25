@@ -2,63 +2,87 @@
 import Base from "../../layouts/Base.astro";
 import PropuestaBar from "../../components/PropuestaBar.astro";
 import PedidoMenu from "../../components/PedidoMenu.astro";
+import Foto from "../../components/Foto.astro";
+import Galeria from "../../components/Galeria.astro";
+import { F } from "../../fotos";
 
-// Carta de ejemplo: se reemplaza por la carta real de Morfis antes de mostrarla.
+// Foto del frente tomada de su ficha de Google (subida por el dueño).
+// Carta y fotos de platos de ejemplo: se reemplazan por las reales de Morfis.
 const menu = [
   {
     categoria: "Hamburguesas",
     items: [
-      { id: "h-clasica", nombre: "Hamburguesa clásica", precio: 9500, nota: "Con papas fritas" },
-      { id: "h-cheddar", nombre: "Doble cheddar y panceta", precio: 12500, nota: "Con papas fritas" },
-      { id: "h-veggie", nombre: "Hamburguesa de lentejas", precio: 9800 },
+      { id: "h-clasica", nombre: "Hamburguesa clásica", precio: 9500, nota: "Con papas fritas", img: F.hamburguesa },
+      { id: "h-cheddar", nombre: "Doble cheddar y panceta", precio: 12500, nota: "Con papas fritas", img: F.hamburguesaDoble },
+      { id: "h-veggie", nombre: "Hamburguesa de lentejas", precio: 9800, img: F.hamburguesaVeggie },
     ],
   },
   {
     categoria: "Lomitos y sándwiches",
     items: [
-      { id: "lomito", nombre: "Lomito completo", precio: 14000, nota: "Lomo, jamón, queso, huevo, lechuga y tomate" },
-      { id: "mila-sand", nombre: "Sándwich de milanesa", precio: 11000 },
+      { id: "lomito", nombre: "Lomito completo", precio: 14000, nota: "Lomo, jamón, queso, huevo, lechuga y tomate", img: F.lomito },
+      { id: "mila-sand", nombre: "Sándwich de milanesa", precio: 11000, img: F.sandwichMila },
     ],
   },
   {
     categoria: "Pizzas",
     items: [
-      { id: "p-muzza", nombre: "Muzzarella", precio: 11500 },
-      { id: "p-fugazzeta", nombre: "Fugazzeta rellena", precio: 14000 },
+      { id: "p-muzza", nombre: "Muzzarella", precio: 11500, img: F.pizzaMuzza },
+      { id: "p-fugazzeta", nombre: "Fugazzeta rellena", precio: 14000, img: F.pizzaCebolla },
     ],
   },
   {
     categoria: "Para picar",
     items: [
-      { id: "papas", nombre: "Papas fritas grandes", precio: 6000 },
-      { id: "papas-cheddar", nombre: "Papas con cheddar y verdeo", precio: 8000 },
-      { id: "nuggets", nombre: "Nuggets x10", precio: 7000 },
+      { id: "papas", nombre: "Papas fritas grandes", precio: 6000, img: F.papas },
+      { id: "papas-cheddar", nombre: "Papas con cheddar y verdeo", precio: 8000, img: F.papasCheddar },
+      { id: "nuggets", nombre: "Nuggets x10", precio: 7000, img: F.nuggets },
     ],
   },
   {
     categoria: "Bebidas",
     items: [
-      { id: "gaseosa", nombre: "Gaseosa 1,5 l", precio: 4500 },
-      { id: "agua", nombre: "Agua saborizada 1,5 l", precio: 3500 },
+      { id: "gaseosa", nombre: "Gaseosa 1,5 l", precio: 4500, img: F.gaseosa },
+      { id: "agua", nombre: "Agua saborizada 1,5 l", precio: 3500, img: F.aguaSaborizada },
+    ],
+  },
+  {
+    categoria: "Tragos",
+    items: [
+      { id: "gin", nombre: "Gin tonic", precio: 6500, nota: "Con limón o pepino", img: F.ginTonic },
+      { id: "fernet", nombre: "Fernet con cola", precio: 5500, img: F.fernet },
+      { id: "autor", nombre: "Trago de autor", precio: 7500, nota: "Naranja, romero y espumante", img: F.tragoAutor },
     ],
   },
 ];
+
+const galeria = [
+  { src: F.combo, alt: "Hamburguesa con papas y bebida" },
+  { src: F.pizza, alt: "Pizza recién salida del horno" },
+  { src: F.hamburguesaDoble, alt: "Hamburguesa doble" },
+  { src: F.papas, alt: "Canasta de papas fritas" },
+  { src: F.gaseosa, alt: "Gaseosa bien fría" },
+];
 ---
 
-<Base title="Morfis | Comidas en Toay (propuesta)" description="Propuesta de sitio web para Morfis: carta digital y pedidos por WhatsApp." noindex>
+<Base title="Morfis | Restaurante y bar en Toay (propuesta)" description="Propuesta de sitio web para Morfis: carta digital, tragos y pedidos por WhatsApp." noindex>
   <PropuestaBar negocio="Morfis" />
 
   <div class="bg-(--soft)" style="--accent:#e0461f;--accent-dark:#2b1d16;--soft:#fff6ea">
     <header class="relative overflow-hidden bg-(--accent-dark) text-white">
-      <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-(--accent) opacity-80"></div>
-      <div class="absolute right-24 -bottom-16 hidden h-40 w-40 rounded-full bg-[#ffb627] opacity-90 md:block"></div>
-      <div class="relative mx-auto max-w-5xl px-4 py-16">
-        <p class="text-sm font-semibold tracking-widest text-[#ffb627] uppercase">Comidas · Toay</p>
-        <h1 class="font-display mt-2 text-6xl font-bold">Morfis</h1>
-        <p class="mt-3 max-w-md text-white/85">Mirá la carta con precios actualizados, armá tu pedido y mandalo directo a nuestro WhatsApp. Sin esperar respuesta.</p>
-        <div class="mt-6 flex flex-wrap gap-3">
-          <a href="#Hamburguesas" class="btn bg-(--accent) text-white hover:brightness-110">Ver la carta</a>
-          <a href="#ubicacion" class="btn border border-white/40 text-white hover:bg-white/10">Cómo llegar</a>
+      <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-(--accent) opacity-60"></div>
+      <div class="relative mx-auto grid max-w-5xl items-center gap-10 px-4 py-14 md:grid-cols-2 md:py-20">
+        <div>
+          <p class="text-sm font-semibold tracking-widest text-[#ffb627] uppercase">Restaurante · Tragos · Bar · Toay</p>
+          <h1 class="font-display mt-2 text-6xl font-bold">Morfis</h1>
+          <p class="mt-3 max-w-md text-white/85">Buena comida y buenos momentos. Mirá la carta con precios actualizados, armá tu pedido y mandalo directo a nuestro WhatsApp.</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="#Hamburguesas" class="btn bg-(--accent) text-white hover:brightness-110">Ver la carta</a>
+            <a href="#ubicacion" class="btn border border-white/40 text-white hover:bg-white/10">Cómo llegar</a>
+          </div>
+        </div>
+        <div class="aspect-[4/3] overflow-hidden rounded-3xl bg-white/10 shadow-2xl ring-1 ring-white/15">
+          <Foto src="/propuestas/morfis/fachada.jpg" alt="Frente de Morfis de noche, con el cartel iluminado" eager class="h-full w-full object-cover" />
         </div>
       </div>
     </header>
@@ -66,6 +90,13 @@ const menu = [
     <p class="mx-auto max-w-5xl px-4 pt-6 text-sm text-black/60">Carta y precios de ejemplo. En el sitio real va la carta de Morfis, y la cambian ustedes desde un panel cuando suben los precios.</p>
 
     <PedidoMenu menu={menu} negocio="Morfis" prefijo="[PROPUESTA]" envio={1500} />
+
+    <section class="mx-auto max-w-5xl px-4 pb-14">
+      <h2 class="font-display text-3xl font-bold text-(--accent-dark)">Galería</h2>
+      <div class="mt-6">
+        <Galeria fotos={galeria} nota="Fotos de ejemplo. En el sitio real van fotos del salón, los platos y los tragos de Morfis." />
+      </div>
+    </section>
 
     <section id="ubicacion" class="scroll-mt-16 bg-white">
       <div class="mx-auto grid max-w-5xl gap-8 px-4 py-14 md:grid-cols-2">

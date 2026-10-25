@@ -2,14 +2,16 @@
 import Base from "../../layouts/Base.astro";
 import DemoBar from "../../components/DemoBar.astro";
 import ReservaTurno from "../../components/ReservaTurno.astro";
+import Foto from "../../components/Foto.astro";
+import { F } from "../../fotos";
 
 const servicios = [
-  { id: "corte", nombre: "Corte", duracion: 45, precio: 12000 },
-  { id: "corte-brushing", nombre: "Corte y brushing", duracion: 60, precio: 18000 },
-  { id: "color", nombre: "Color completo", duracion: 120, precio: 38000 },
-  { id: "mechas", nombre: "Mechas o balayage", duracion: 180, precio: 55000 },
-  { id: "manos", nombre: "Esmaltado semipermanente", duracion: 60, precio: 14000 },
-  { id: "cejas", nombre: "Perfilado de cejas", duracion: 30, precio: 7000 },
+  { id: "corte", nombre: "Corte", duracion: 45, precio: 12000, img: F.corte },
+  { id: "corte-brushing", nombre: "Corte y brushing", duracion: 60, precio: 18000, img: F.brushing },
+  { id: "color", nombre: "Color completo", duracion: 120, precio: 38000, img: F.color },
+  { id: "mechas", nombre: "Mechas o balayage", duracion: 180, precio: 55000, img: F.mechas },
+  { id: "manos", nombre: "Esmaltado semipermanente", duracion: 60, precio: 14000, img: F.unas },
+  { id: "cejas", nombre: "Perfilado de cejas", duracion: 30, precio: 7000, img: F.cejas },
 ];
 
 const profesionales = ["Cualquiera", "Malena", "Sofía", "Lucas"];
@@ -26,16 +28,24 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
       <h1 class="font-display mt-3 text-5xl font-bold md:text-6xl">Estudio Malva</h1>
       <p class="mx-auto mt-4 max-w-md text-[#3a2433]/70">Sacá tu turno en 1 minuto, sin esperar respuesta por mensaje.</p>
       <a href="#turno" class="btn mt-6 bg-[#3a2433] text-white hover:bg-[#5b3a50]">Reservar turno</a>
+      <div class="mt-10 h-56 overflow-hidden rounded-3xl bg-(--soft) md:h-80">
+        <Foto src={F.salon} alt="El salón de Estudio Malva" ancho={1600} eager class="h-full w-full object-cover" />
+      </div>
     </header>
 
     <section class="mx-auto max-w-5xl px-4">
       <h2 class="font-display text-2xl font-bold">Servicios</h2>
-      <div class="mt-4 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+      <div class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
         {servicios.map((s) => (
-          <div class="rounded-2xl bg-white p-5 ring-1 ring-[#3a2433]/10">
-            <p class="font-semibold">{s.nombre}</p>
-            <p class="mt-1 text-sm text-[#3a2433]/60">{s.duracion} min</p>
-            <p class="mt-2 font-semibold text-[#b07aa1]">${fmt(s.precio)}</p>
+          <div class="overflow-hidden rounded-2xl bg-white ring-1 ring-[#3a2433]/10">
+            <div class="aspect-[3/2] bg-(--soft)">
+              <Foto src={s.img} alt={s.nombre} ancho={600} class="h-full w-full object-cover" />
+            </div>
+            <div class="p-3 sm:p-5">
+              <p class="font-semibold">{s.nombre}</p>
+              <p class="mt-1 text-sm text-[#3a2433]/60">{s.duracion} min</p>
+              <p class="mt-2 font-semibold text-[#b07aa1]">${fmt(s.precio)}</p>
+            </div>
           </div>
         ))}
       </div>

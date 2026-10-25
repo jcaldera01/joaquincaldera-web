@@ -2,15 +2,27 @@
 import Base from "../../layouts/Base.astro";
 import PropuestaBar from "../../components/PropuestaBar.astro";
 import ReservaTurno from "../../components/ReservaTurno.astro";
+import Foto from "../../components/Foto.astro";
+import Galeria from "../../components/Galeria.astro";
+import { F } from "../../fotos";
 
-// Tratamientos y precios de ejemplo: se reemplazan por los reales de Santé.
+// Foto del frente tomada de su ficha de Google (subida por el dueño).
+// Tratamientos, precios y demás fotos de ejemplo: se reemplazan por los reales de Santé.
 const servicios = [
-  { id: "limpieza", nombre: "Limpieza facial profunda", duracion: 60, precio: 22000 },
-  { id: "dermaplaning", nombre: "Dermaplaning", duracion: 45, precio: 25000 },
-  { id: "masaje", nombre: "Masaje descontracturante", duracion: 60, precio: 20000 },
-  { id: "drenaje", nombre: "Drenaje linfático", duracion: 60, precio: 21000 },
-  { id: "pestanas", nombre: "Lifting de pestañas", duracion: 60, precio: 18000 },
-  { id: "depilacion", nombre: "Depilación definitiva (por zona)", duracion: 30, precio: 15000 },
+  { id: "limpieza", nombre: "Limpieza facial profunda", duracion: 60, precio: 22000, img: F.limpiezaFacial },
+  { id: "dermaplaning", nombre: "Dermaplaning", duracion: 45, precio: 25000, img: F.dermaplaning },
+  { id: "masaje", nombre: "Masaje descontracturante", duracion: 60, precio: 20000, img: F.masaje },
+  { id: "drenaje", nombre: "Drenaje linfático", duracion: 60, precio: 21000, img: F.drenaje },
+  { id: "pestanas", nombre: "Lifting de pestañas", duracion: 60, precio: 18000, img: F.pestanas },
+  { id: "depilacion", nombre: "Depilación definitiva (por zona)", duracion: 30, precio: 15000, img: F.depilacion },
+];
+
+const galeria = [
+  { src: "/propuestas/sante/fachada.jpg", alt: "Frente de Santé Salud & Estética" },
+  { src: F.piedras, alt: "Masaje con piedras calientes" },
+  { src: F.aceites, alt: "Aceites esenciales" },
+  { src: F.masajeFacial, alt: "Masaje facial" },
+  { src: F.toalla, alt: "Momento de relax" },
 ];
 
 const horarios = ["09:00", "10:00", "11:00", "12:00", "16:00", "17:00", "18:00", "19:00"];
@@ -28,22 +40,28 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
         <p class="mt-4 max-w-md text-[#2d3a35]/75">Tratamientos faciales, corporales y de bienestar. Elegí el tuyo y reservá el turno en un minuto, cuando quieras.</p>
         <a href="#turno" class="btn mt-6 bg-[#2d3a35] text-white hover:bg-[#1f2925]">Reservar turno</a>
       </div>
-      <div class="relative mx-auto aspect-square w-full max-w-xs" aria-hidden="true">
-        <div class="absolute inset-0 rounded-full bg-[#dfe8e3]"></div>
-        <div class="absolute inset-8 rounded-full bg-[#c9d8d0]"></div>
-        <div class="absolute inset-16 rounded-full bg-[#8aa399]"></div>
+      <div class="relative mx-auto aspect-[4/5] w-full max-w-[15rem] md:max-w-xs">
+        <div class="absolute -inset-3 rounded-t-full bg-[#dfe8e3]"></div>
+        <div class="absolute inset-0 overflow-hidden rounded-t-full bg-[#c9d8d0]">
+          <Foto src={F.facial} alt="Tratamiento facial en cabina" ancho={800} eager class="h-full w-full object-cover" />
+        </div>
       </div>
     </header>
 
     <section class="mx-auto max-w-5xl px-4">
       <h2 class="font-display text-2xl font-bold">Tratamientos</h2>
       <p class="mt-1 text-sm text-black/55">Lista y precios de ejemplo. En el sitio real van los tratamientos de Santé.</p>
-      <div class="mt-4 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+      <div class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
         {servicios.map((s) => (
-          <div class="rounded-2xl bg-white p-5 ring-1 ring-black/10">
-            <p class="font-semibold">{s.nombre}</p>
-            <p class="mt-1 text-sm text-black/55">{s.duracion} min</p>
-            <p class="mt-2 font-semibold text-[#5d7a6f]">${fmt(s.precio)}</p>
+          <div class="overflow-hidden rounded-2xl bg-white ring-1 ring-black/10">
+            <div class="aspect-[3/2] bg-(--soft)">
+              <Foto src={s.img} alt={s.nombre} ancho={600} class="h-full w-full object-cover" />
+            </div>
+            <div class="p-3 sm:p-5">
+              <p class="font-semibold">{s.nombre}</p>
+              <p class="mt-1 text-sm text-black/55">{s.duracion} min</p>
+              <p class="mt-2 font-semibold text-[#5d7a6f]">${fmt(s.precio)}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -55,6 +73,13 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
         <div class="mt-6">
           <ReservaTurno servicios={servicios} horarios={horarios} diasCerrados={[0]} negocio="Santé Salud & Estética" prefijo="[PROPUESTA]" />
         </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-5xl px-4 pb-16">
+      <h2 class="font-display text-2xl font-bold">El espacio</h2>
+      <div class="mt-4">
+        <Galeria fotos={galeria} nota="La foto del frente es de su ficha de Google; las demás son de ejemplo. En el sitio real van fotos de las cabinas y de sus tratamientos." />
       </div>
     </section>
 

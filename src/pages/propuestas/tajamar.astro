@@ -3,9 +3,13 @@ import Base from "../../layouts/Base.astro";
 import PropuestaBar from "../../components/PropuestaBar.astro";
 import Catalogo from "../../components/Catalogo.astro";
 import Horarios from "../../components/Horarios.astro";
+import Foto from "../../components/Foto.astro";
+import Galeria from "../../components/Galeria.astro";
 import { waLink } from "../../config";
+import { F } from "../../fotos";
 
-// Dirección, horarios y calificación tomados de su ficha de Google. Productos y precios de ejemplo.
+// Dirección, horarios, calificación y fotos del local tomados de su ficha de Google.
+// Productos, precios y fotos de productos de ejemplo.
 const horarios: [string, string][][] = [
   [],
   [["08:00", "12:30"], ["16:30", "20:30"]],
@@ -16,20 +20,33 @@ const horarios: [string, string][][] = [
   [["09:00", "13:00"], ["17:00", "20:00"]],
 ];
 
-const rubros = ["Caza", "Pesca", "Camping", "Óptica", "Cuchillería", "Indumentaria"];
+const rubros = [
+  { nombre: "Caza", img: F.caza },
+  { nombre: "Pesca", img: F.pesca },
+  { nombre: "Camping", img: F.camping },
+  { nombre: "Óptica", img: F.optica },
+  { nombre: "Cuchillería", img: F.cuchilleria },
+  { nombre: "Indumentaria", img: F.indumentaria },
+];
+
+const local = [
+  { src: "/propuestas/tajamar/interior.jpg", alt: "Interior de Armería El Tajamar" },
+  { src: "/propuestas/tajamar/mostrador.jpg", alt: "Mostrador y vitrinas" },
+  { src: "/propuestas/tajamar/entrada.jpg", alt: "Entrada del local con kayaks y sillas" },
+];
 
 const productos = [
-  { nombre: "Caña de pesca 2,10 m", categoria: "Pesca", precio: 38000 },
-  { nombre: "Reel frontal", categoria: "Pesca", precio: 45000 },
-  { nombre: "Kayak sit-on-top", categoria: "Pesca", nota: "Consultá modelos y colores" },
-  { nombre: "Carpa iglú 4 personas", categoria: "Camping", precio: 120000 },
-  { nombre: "Silla plegable", categoria: "Camping", precio: 25000 },
-  { nombre: "Conservadora 25 l", categoria: "Camping", precio: 48000 },
-  { nombre: "Binocular 10x50", categoria: "Óptica", precio: 85000 },
-  { nombre: "Mira telescópica 3-9x40", categoria: "Óptica", precio: 110000 },
-  { nombre: "Cuchillo de caza", categoria: "Cuchillería", precio: 32000 },
-  { nombre: "Campera camuflada", categoria: "Indumentaria", precio: 75000 },
-  { nombre: "Armas y municiones", categoria: "Caza", nota: "Venta solo en el local, a quien tenga credencial de legítimo usuario vigente." },
+  { nombre: "Caña de pesca 2,10 m", categoria: "Pesca", precio: 38000, img: F.cana },
+  { nombre: "Reel frontal", categoria: "Pesca", precio: 45000, img: F.reel },
+  { nombre: "Kayak sit-on-top", categoria: "Pesca", nota: "Consultá modelos y colores", img: F.kayak },
+  { nombre: "Carpa iglú 4 personas", categoria: "Camping", precio: 120000, img: F.carpa },
+  { nombre: "Silla plegable", categoria: "Camping", precio: 25000, img: F.silla },
+  { nombre: "Conservadora 25 l", categoria: "Camping", precio: 48000, img: F.conservadora },
+  { nombre: "Binocular 10x50", categoria: "Óptica", precio: 85000, img: F.binocular },
+  { nombre: "Mira telescópica 3-9x40", categoria: "Óptica", precio: 110000, img: F.mira },
+  { nombre: "Cuchillo de caza", categoria: "Cuchillería", precio: 32000, img: F.cuchillo },
+  { nombre: "Campera camuflada", categoria: "Indumentaria", precio: 75000, img: F.campera },
+  { nombre: "Armas y municiones", categoria: "Caza", nota: "Venta solo en el local, a quien tenga credencial de legítimo usuario vigente.", img: "/propuestas/tajamar/mostrador.jpg" },
 ];
 ---
 
@@ -37,8 +54,10 @@ const productos = [
   <PropuestaBar negocio="Armería El Tajamar" />
 
   <div class="bg-[#f5f2ea] text-[#22251c]" style="--accent:#6b7a3a;--accent-dark:#2f3820;--soft:#e8e6d6">
-    <header class="bg-[#2f3820] text-[#f5f2ea]">
-      <div class="mx-auto max-w-5xl px-4 py-16">
+    <header class="relative overflow-hidden bg-[#2f3820] text-[#f5f2ea]">
+      <Foto src="/propuestas/tajamar/interior.jpg" alt="" eager class="absolute inset-0 h-full w-full object-cover opacity-50" />
+      <div class="absolute inset-0 bg-gradient-to-r from-[#2f3820] via-[#2f3820]/85 to-[#2f3820]/30"></div>
+      <div class="relative mx-auto max-w-5xl px-4 py-20 md:py-24">
         <p class="text-sm font-semibold tracking-widest text-[#c8b273] uppercase">Caza · Pesca · Camping · Santa Rosa</p>
         <h1 class="font-display mt-2 text-5xl font-bold md:text-6xl">Armería El Tajamar</h1>
         <p class="mt-3 max-w-xl text-[#f5f2ea]/80">Todo para salir al campo, al río o de camping, con atención de gente que sabe. Consultá stock antes de venir.</p>
@@ -52,7 +71,13 @@ const productos = [
     <section class="mx-auto max-w-5xl px-4 py-12">
       <h2 class="font-display text-3xl font-bold">Rubros</h2>
       <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
-        {rubros.map((r) => <div class="rounded-2xl bg-white px-4 py-5 text-center font-semibold ring-1 ring-black/10">{r}</div>)}
+        {rubros.map((r) => (
+          <div class="relative flex h-28 items-end overflow-hidden rounded-2xl bg-[#2f3820] p-3 md:h-36">
+            <Foto src={r.img} alt="" ancho={400} class="absolute inset-0 h-full w-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <span class="relative font-semibold text-white">{r.nombre}</span>
+          </div>
+        ))}
       </div>
     </section>
 
@@ -63,6 +88,13 @@ const productos = [
         <Catalogo productos={productos} prefijo="[PROPUESTA]" />
       </div>
       <p class="mt-6 rounded-2xl bg-[#e8e6d6] p-4 text-sm">Las armas y municiones no se venden online: se muestran solo para consulta y se venden en el local a quien tenga credencial de legítimo usuario vigente.</p>
+    </section>
+
+    <section class="mx-auto max-w-5xl px-4 pb-14">
+      <h2 class="font-display text-3xl font-bold">El local</h2>
+      <div class="mt-6">
+        <Galeria fotos={local} nota="Fotos de su ficha de Google Maps." />
+      </div>
     </section>
 
     <section class="bg-white">

@@ -2,12 +2,14 @@
 // Catálogo con buscador y filtro por categoría; cada producto se consulta por WhatsApp.
 // Los colores salen de las variables --accent, --accent-dark y --soft del contenedor.
 import { waLink } from "../config";
+import Foto from "./Foto.astro";
 
 interface Producto {
   nombre: string;
   categoria: string;
   precio?: number;
   nota?: string;
+  img?: string;
 }
 
 interface Props {
@@ -28,14 +30,21 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
     ))}
   </div>
 </div>
-<div class="mt-6 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+<div class="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3">
   {productos.map((p) => (
-    <div data-producto data-nombre={p.nombre.toLowerCase()} data-categoria={p.categoria} class="flex flex-col rounded-2xl bg-white p-5 ring-1 ring-black/10">
-      <span class="self-start rounded-full bg-(--soft) px-2 py-0.5 text-xs font-medium">{p.categoria}</span>
-      <p class="mt-3 flex-1 font-semibold">{p.nombre}</p>
-      {p.precio !== undefined && <p class="mt-2 text-lg font-bold text-(--accent-dark)">${fmt(p.precio)}</p>}
-      {p.nota && <p class="mt-2 text-sm text-black/60">{p.nota}</p>}
-      <a href={waLink(`${prefijo} Hola, quería consultar por "${p.nombre}".`)} target="_blank" rel="noopener" class="mt-3 text-sm font-semibold text-(--accent-dark) hover:underline">Consultar por WhatsApp →</a>
+    <div data-producto data-nombre={p.nombre.toLowerCase()} data-categoria={p.categoria} class="flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-black/10">
+      {p.img && (
+        <div class="aspect-[4/3] bg-(--soft)">
+          <Foto src={p.img} alt={p.nombre} ancho={600} class="h-full w-full object-cover" />
+        </div>
+      )}
+      <div class="flex flex-1 flex-col p-3 sm:p-5">
+        <span class="self-start rounded-full bg-(--soft) px-2 py-0.5 text-xs font-medium">{p.categoria}</span>
+        <p class="mt-2 flex-1 text-sm leading-snug font-semibold sm:mt-3 sm:text-base">{p.nombre}</p>
+        {p.precio !== undefined && <p class="mt-2 font-bold text-(--accent-dark) sm:text-lg">${fmt(p.precio)}</p>}
+        {p.nota && <p class="mt-2 text-xs text-black/60 sm:text-sm">{p.nota}</p>}
+        <a href={waLink(`${prefijo} Hola, quería consultar por "${p.nombre}".`)} target="_blank" rel="noopener" class="mt-3 text-sm font-semibold text-(--accent-dark) hover:underline"><span class="sm:hidden">Consultar →</span><span class="hidden sm:inline">Consultar por WhatsApp →</span></a>
+      </div>
     </div>
   ))}
 </div>

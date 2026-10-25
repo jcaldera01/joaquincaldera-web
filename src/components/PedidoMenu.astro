@@ -2,12 +2,14 @@
 // Menú con carrito que arma el pedido y lo manda por WhatsApp.
 // Los colores salen de las variables --accent, --accent-dark y --soft del contenedor.
 import { SITE } from "../config";
+import Foto from "./Foto.astro";
 
 interface Item {
   id: string;
   nombre: string;
   precio: number;
   nota?: string;
+  img?: string;
 }
 
 interface Props {
@@ -35,16 +37,19 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
       <h2 class="font-display text-2xl font-bold text-(--accent-dark)">{c.categoria}</h2>
       <div class="mt-4 grid gap-3 sm:grid-cols-2">
         {c.items.map((item) => (
-          <div class="flex items-center justify-between gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5">
-            <div>
-              <p class="font-semibold">{item.nombre}</p>
-              {item.nota && <p class="text-sm text-black/55">{item.nota}</p>}
-              <p class="mt-1 font-semibold text-(--accent)">${fmt(item.precio)}</p>
-            </div>
-            <div class="flex shrink-0 items-center gap-2">
-              <button data-menos={item.id} class="h-9 w-9 rounded-full bg-black/5 text-lg font-bold hover:bg-black/10" aria-label={`Quitar ${item.nombre}`}>−</button>
-              <span data-cant={item.id} class="w-5 text-center font-semibold">0</span>
-              <button data-mas={item.id} class="h-9 w-9 rounded-full bg-(--accent) text-lg font-bold text-white hover:bg-(--accent-dark)" aria-label={`Agregar ${item.nombre}`}>+</button>
+          <div class="flex gap-3 rounded-2xl bg-white p-3 shadow-sm ring-1 ring-black/5">
+            {item.img && <Foto src={item.img} alt={item.nombre} ancho={240} class="h-24 w-24 shrink-0 rounded-xl bg-(--soft) object-cover" />}
+            <div class="flex min-w-0 flex-1 flex-col pl-1">
+              <p class="leading-snug font-semibold">{item.nombre}</p>
+              {item.nota && <p class="mt-0.5 text-sm leading-snug text-black/55">{item.nota}</p>}
+              <div class="mt-auto flex items-center justify-between gap-2 pt-2">
+                <p class="font-semibold text-(--accent)">${fmt(item.precio)}</p>
+                <div class="flex shrink-0 items-center gap-2">
+                  <button data-menos={item.id} class="h-9 w-9 rounded-full bg-black/5 text-lg font-bold hover:bg-black/10" aria-label={`Quitar ${item.nombre}`}>−</button>
+                  <span data-cant={item.id} class="w-5 text-center font-semibold">0</span>
+                  <button data-mas={item.id} class="h-9 w-9 rounded-full bg-(--accent) text-lg font-bold text-white hover:bg-(--accent-dark)" aria-label={`Agregar ${item.nombre}`}>+</button>
+                </div>
+              </div>
             </div>
           </div>
         ))}

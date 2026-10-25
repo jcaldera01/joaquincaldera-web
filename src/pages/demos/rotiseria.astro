@@ -2,38 +2,40 @@
 import Base from "../../layouts/Base.astro";
 import DemoBar from "../../components/DemoBar.astro";
 import PedidoMenu from "../../components/PedidoMenu.astro";
+import Foto from "../../components/Foto.astro";
+import { F } from "../../fotos";
 
 // Precios de ejemplo. En un cliente real, el menú sale de Supabase y el dueño lo edita desde su panel.
 const menu = [
   {
     categoria: "Empanadas",
     items: [
-      { id: "emp-carne", nombre: "Empanada de carne cortada a cuchillo", precio: 1800 },
-      { id: "emp-jyq", nombre: "Empanada de jamón y queso", precio: 1700 },
-      { id: "emp-docena", nombre: "Docena surtida", precio: 19000, nota: "Elegí los gustos en el comentario" },
+      { id: "emp-carne", nombre: "Empanada de carne cortada a cuchillo", precio: 1800, img: F.empanadaCarne },
+      { id: "emp-jyq", nombre: "Empanada de jamón y queso", precio: 1700, img: F.empanadaJyq },
+      { id: "emp-docena", nombre: "Docena surtida", precio: 19000, nota: "Elegí los gustos en el comentario", img: F.empanadasDocena },
     ],
   },
   {
     categoria: "Pizzas",
     items: [
-      { id: "piz-muzza", nombre: "Muzzarella", precio: 12000 },
-      { id: "piz-napo", nombre: "Napolitana", precio: 13500 },
-      { id: "piz-especial", nombre: "Especial de la casa", precio: 15000, nota: "Jamón, morrones, huevo y aceitunas" },
+      { id: "piz-muzza", nombre: "Muzzarella", precio: 12000, img: F.pizzaMuzza },
+      { id: "piz-napo", nombre: "Napolitana", precio: 13500, img: F.pizzaNapo },
+      { id: "piz-especial", nombre: "Especial de la casa", precio: 15000, nota: "Jamón, morrones, huevo y aceitunas", img: F.pizzaEspecial },
     ],
   },
   {
     categoria: "Platos",
     items: [
-      { id: "mila-napo", nombre: "Milanesa napolitana con papas fritas", precio: 14500 },
-      { id: "pollo", nombre: "Pollo al spiedo entero", precio: 16000 },
-      { id: "pollo-medio", nombre: "Medio pollo con papas", precio: 11000 },
+      { id: "mila-napo", nombre: "Milanesa napolitana con papas fritas", precio: 14500, img: F.milanesa },
+      { id: "pollo", nombre: "Pollo al spiedo entero", precio: 16000, img: F.pollo },
+      { id: "pollo-medio", nombre: "Medio pollo con papas", precio: 11000, img: F.medioPollo },
     ],
   },
   {
     categoria: "Bebidas",
     items: [
-      { id: "gaseosa", nombre: "Gaseosa 1,5 l", precio: 4500 },
-      { id: "cerveza", nombre: "Cerveza 1 l", precio: 5500 },
+      { id: "gaseosa", nombre: "Gaseosa 1,5 l", precio: 4500, img: F.gaseosa },
+      { id: "cerveza", nombre: "Cerveza 1 l", precio: 5500, img: F.cerveza },
     ],
   },
 ];
@@ -44,8 +46,10 @@ const menu = [
   <DemoBar rubro="rotisería" />
 
   <div class="bg-(--soft)" style="--accent:#c25a1c;--accent-dark:#7a2e12;--soft:#fff8ef">
-    <header class="bg-gradient-to-br from-[#7a2e12] to-[#c25a1c] text-white">
-      <div class="mx-auto max-w-5xl px-4 py-14">
+    <header class="relative overflow-hidden bg-[#7a2e12] text-white">
+      <Foto src={F.empanadas} alt="" ancho={1600} eager class="absolute inset-0 h-full w-full object-cover opacity-60" />
+      <div class="absolute inset-0 bg-gradient-to-r from-[#7a2e12] via-[#7a2e12]/85 to-[#c25a1c]/30"></div>
+      <div class="relative mx-auto max-w-5xl px-4 py-20 md:py-24">
         <p class="text-sm font-semibold tracking-widest text-white/80 uppercase">Rotisería y pizzería</p>
         <h1 class="font-display mt-2 text-5xl font-bold">La Tranquera</h1>
         <p class="mt-3 max-w-lg text-white/85">Comida casera para llevar o con delivery en Toay y Santa Rosa. Armá tu pedido acá y te llega directo a nuestro WhatsApp.</p>

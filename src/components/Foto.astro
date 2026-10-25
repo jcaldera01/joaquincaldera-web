@@ -1,0 +1,16 @@
+---
+// Imagen con carga diferida. Si la foto no carga, se quita y queda el fondo del contenedor.
+import { foto } from "../fotos";
+
+interface Props {
+  src: string; // id de Unsplash (F.algo) o ruta local ("/propuestas/...")
+  alt: string;
+  ancho?: number;
+  class?: string;
+  eager?: boolean;
+}
+
+const { src, alt, ancho = 800, class: clase = "", eager = false } = Astro.props;
+---
+
+<img src={foto(src, ancho)} alt={alt} class={clase} loading={eager ? "eager" : "lazy"} decoding="async" onerror="this.remove()" />

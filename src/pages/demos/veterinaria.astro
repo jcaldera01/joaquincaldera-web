@@ -2,26 +2,28 @@
 import Base from "../../layouts/Base.astro";
 import DemoBar from "../../components/DemoBar.astro";
 import Catalogo from "../../components/Catalogo.astro";
+import Foto from "../../components/Foto.astro";
 import { SITE, waLink } from "../../config";
+import { F } from "../../fotos";
 
 const servicios = [
-  { titulo: "Consultas", texto: "Perros, gatos y animales de granja. Con turno o por orden de llegada." },
-  { titulo: "Vacunación", texto: "Plan completo de cachorros y refuerzos anuales, con libreta sanitaria." },
-  { titulo: "Cirugías", texto: "Castraciones y cirugías programadas con quirófano propio." },
-  { titulo: "Peluquería canina", texto: "Baño, corte y deslanado. Te avisamos por WhatsApp cuando está listo." },
+  { titulo: "Consultas", texto: "Perros, gatos y animales de granja. Con turno o por orden de llegada.", img: F.consulta },
+  { titulo: "Vacunación", texto: "Plan completo de cachorros y refuerzos anuales, con libreta sanitaria.", img: F.vacuna },
+  { titulo: "Cirugías", texto: "Castraciones y cirugías programadas con quirófano propio.", img: F.revision },
+  { titulo: "Peluquería canina", texto: "Baño, corte y deslanado. Te avisamos por WhatsApp cuando está listo.", img: F.perroBlanco },
 ];
 
 // En un cliente real, el catálogo y el stock salen de Supabase.
 const productos = [
-  { nombre: "Alimento perro adulto 15 kg", categoria: "Alimentos", precio: 52000 },
-  { nombre: "Alimento perro cachorro 7,5 kg", categoria: "Alimentos", precio: 31000 },
-  { nombre: "Alimento gato adulto 7,5 kg", categoria: "Alimentos", precio: 36000 },
-  { nombre: "Pipeta antipulgas perro 10-20 kg", categoria: "Antiparasitarios", precio: 9500 },
-  { nombre: "Comprimido antiparasitario interno", categoria: "Antiparasitarios", precio: 6800 },
-  { nombre: "Collar antipulgas gato", categoria: "Antiparasitarios", precio: 8200 },
-  { nombre: "Correa y collar reforzado", categoria: "Accesorios", precio: 14000 },
-  { nombre: "Cucha térmica mediana", categoria: "Accesorios", precio: 45000 },
-  { nombre: "Piedras sanitarias 4 kg", categoria: "Accesorios", precio: 7500 },
+  { nombre: "Alimento perro adulto 15 kg", categoria: "Alimentos", precio: 52000, img: F.alimentoPerro },
+  { nombre: "Alimento perro cachorro 7,5 kg", categoria: "Alimentos", precio: 31000, img: F.cachorro },
+  { nombre: "Alimento gato adulto 7,5 kg", categoria: "Alimentos", precio: 36000, img: F.alimentoGato },
+  { nombre: "Pipeta antipulgas perro 10-20 kg", categoria: "Antiparasitarios", precio: 9500, img: F.perrosCorriendo },
+  { nombre: "Comprimido antiparasitario interno", categoria: "Antiparasitarios", precio: 6800, img: F.labrador },
+  { nombre: "Collar antipulgas gato", categoria: "Antiparasitarios", precio: 8200, img: F.gato },
+  { nombre: "Correa y collar reforzado", categoria: "Accesorios", precio: 14000, img: F.correa },
+  { nombre: "Cucha térmica mediana", categoria: "Accesorios", precio: 45000, img: F.perro },
+  { nombre: "Piedras sanitarias 4 kg", categoria: "Accesorios", precio: 7500, img: F.gatoMano },
 ];
 
 ---
@@ -31,7 +33,9 @@ const productos = [
 
   <div class="bg-[#f4f8f6] text-[#163328]" style="--accent:#2f6b55;--accent-dark:#1d4a3a;--soft:#e3efe9">
     <header class="relative overflow-hidden bg-[#1d4a3a] text-white">
-      <div class="mx-auto grid max-w-5xl gap-8 px-4 py-14 md:grid-cols-[1.4fr_1fr] md:items-center">
+      <Foto src={F.vetGato} alt="" ancho={1600} eager class="absolute inset-0 h-full w-full object-cover opacity-50" />
+      <div class="absolute inset-0 bg-gradient-to-r from-[#1d4a3a] via-[#1d4a3a]/85 to-[#1d4a3a]/40"></div>
+      <div class="relative mx-auto grid max-w-5xl gap-8 px-4 py-14 md:grid-cols-[1.4fr_1fr] md:items-center">
         <div>
           <h1 class="font-display text-5xl font-bold">Veterinaria El Caldén</h1>
           <p class="mt-3 max-w-md text-white/80">Cuidamos a tus animales desde hace más de 15 años en Toay. Clínica, cirugía, pet shop y peluquería canina.</p>
@@ -40,7 +44,7 @@ const productos = [
             <a href="#petshop" class="btn border border-white/40 text-white hover:bg-white/10">Ver pet shop</a>
           </div>
         </div>
-        <div class="rounded-3xl bg-white/10 p-6 ring-1 ring-white/20">
+        <div class="rounded-3xl bg-[#1d4a3a]/70 p-6 ring-1 ring-white/20 backdrop-blur">
           <p class="text-sm font-semibold tracking-wider text-[#f2c14e] uppercase">Guardia 24 h</p>
           <p class="mt-2 text-2xl font-bold">Urgencias todos los días</p>
           <a href={`tel:+${SITE.whatsapp}`} class="mt-4 inline-block rounded-full bg-[#f2c14e] px-5 py-2 font-semibold text-[#163328]">Llamar a la guardia</a>
@@ -51,11 +55,16 @@ const productos = [
 
     <section class="mx-auto max-w-5xl px-4 py-14">
       <h2 class="font-display text-3xl font-bold">Servicios</h2>
-      <div class="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+      <div class="mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
         {servicios.map((s) => (
-          <div class="rounded-2xl bg-white p-5 ring-1 ring-[#163328]/10">
-            <h3 class="font-semibold">{s.titulo}</h3>
-            <p class="mt-2 text-sm text-[#163328]/70">{s.texto}</p>
+          <div class="overflow-hidden rounded-2xl bg-white ring-1 ring-[#163328]/10">
+            <div class="aspect-[3/2] bg-(--soft)">
+              <Foto src={s.img} alt={s.titulo} ancho={500} class="h-full w-full object-cover" />
+            </div>
+            <div class="p-3 sm:p-5">
+              <h3 class="font-semibold">{s.titulo}</h3>
+              <p class="mt-2 text-sm text-[#163328]/70">{s.texto}</p>
+            </div>
           </div>
         ))}
       </div>
