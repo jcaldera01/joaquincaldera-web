@@ -3,8 +3,12 @@ import Base from "../../layouts/Base.astro";
 import DemoBar from "../../components/DemoBar.astro";
 import Catalogo from "../../components/Catalogo.astro";
 import Foto from "../../components/Foto.astro";
+import Redes from "../../components/Redes.astro";
 import { SITE, waLink } from "../../config";
 import { F } from "../../fotos";
+
+// Redes del comercio: pegá el link completo de cada una. Si queda vacía, el ícono se muestra de ejemplo.
+const redes = { instagram: "", facebook: "", youtube: "" };
 
 const servicios = [
   { titulo: "Consultas", texto: "Perros, gatos y animales de granja. Con turno o por orden de llegada.", img: F.consulta },
@@ -83,6 +87,7 @@ const productos = [
           <h2 class="font-display text-3xl font-bold">Dónde estamos</h2>
           <p class="mt-3 text-[#163328]/70">Av. Perón 850, Toay, La Pampa. Estacionamiento en la puerta.</p>
           <p class="mt-2 text-[#163328]/70">Envíos de alimento sin cargo en Toay para compras desde $40.000.</p>
+          <Redes {...redes} negocio="Veterinaria El Caldén" nota="Ejemplo: en tu sitio, cada ícono lleva a las redes de tu negocio." class="mt-8" />
         </div>
         <iframe
           title="Mapa de Toay"

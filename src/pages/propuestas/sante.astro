@@ -3,8 +3,12 @@ import Base from "../../layouts/Base.astro";
 import PropuestaBar from "../../components/PropuestaBar.astro";
 import ReservaTurno from "../../components/ReservaTurno.astro";
 import Foto from "../../components/Foto.astro";
+import Redes from "../../components/Redes.astro";
 import Galeria from "../../components/Galeria.astro";
 import { F } from "../../fotos";
+
+// Redes del comercio: pegá el link completo de cada una. Si queda vacía, el ícono se muestra de ejemplo.
+const redes = { instagram: "", facebook: "", youtube: "" };
 
 // Foto del frente tomada de su ficha de Google (subida por el dueño).
 // Tratamientos, precios y demás fotos de ejemplo: se reemplazan por los reales de Santé.
@@ -88,6 +92,7 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
         <div>
           <h2 class="font-display text-3xl font-bold">Dónde estamos</h2>
           <p class="mt-3 text-black/70">Toay, La Pampa.</p>
+          <Redes {...redes} negocio="Santé" nota="Íconos de ejemplo: en el sitio real llevan a sus redes." class="mt-8" />
         </div>
         <iframe title="Mapa de Santé" class="h-64 w-full rounded-2xl border-0" loading="lazy" src="https://www.google.com/maps?q=-36.6689356,-64.3652653&z=16&output=embed"></iframe>
       </div>

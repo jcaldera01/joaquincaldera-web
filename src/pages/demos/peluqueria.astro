@@ -3,7 +3,11 @@ import Base from "../../layouts/Base.astro";
 import DemoBar from "../../components/DemoBar.astro";
 import ReservaTurno from "../../components/ReservaTurno.astro";
 import Foto from "../../components/Foto.astro";
+import Redes from "../../components/Redes.astro";
 import { F } from "../../fotos";
+
+// Redes del comercio: pegá el link completo de cada una. Si queda vacía, el ícono se muestra de ejemplo.
+const redes = { instagram: "", facebook: "", youtube: "" };
 
 const servicios = [
   { id: "corte", nombre: "Corte", duracion: 45, precio: 12000, img: F.corte },
@@ -60,8 +64,9 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
       </div>
     </section>
 
-    <footer class="border-t border-[#3a2433]/10 py-8 text-center text-sm text-[#3a2433]/60">
-      Estudio Malva · San Martín 450, Toay · Mar a sáb de 9 a 20 h
+    <footer class="border-t border-[#3a2433]/10 px-4 py-10 text-center">
+      <p class="text-sm text-[#3a2433]/60">Estudio Malva · San Martín 450, Toay · Mar a sáb de 9 a 20 h</p>
+      <Redes {...redes} negocio="Estudio Malva" nota="Ejemplo: en tu sitio, cada ícono lleva a las redes de tu negocio." class="mt-6 flex flex-col items-center" />
     </footer>
   </div>
 

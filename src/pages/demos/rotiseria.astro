@@ -3,7 +3,11 @@ import Base from "../../layouts/Base.astro";
 import DemoBar from "../../components/DemoBar.astro";
 import PedidoMenu from "../../components/PedidoMenu.astro";
 import Foto from "../../components/Foto.astro";
+import Redes from "../../components/Redes.astro";
 import { F } from "../../fotos";
+
+// Redes del comercio: pegá el link completo de cada una. Si queda vacía, el ícono se muestra de ejemplo.
+const redes = { instagram: "", facebook: "", youtube: "" };
 
 // Precios de ejemplo. En un cliente real, el menú sale de Supabase y el dueño lo edita desde su panel.
 const menu = [
@@ -62,5 +66,10 @@ const menu = [
     </header>
 
     <PedidoMenu menu={menu} negocio="La Tranquera" prefijo="[DEMO]" envio={2000} />
+
+    <footer class="border-t border-black/10 bg-white px-4 py-10 text-center">
+      <p class="text-sm text-black/60">La Tranquera · Av. Regimiento 13, Toay · Mar a dom de 11 a 14 y de 19 a 23 h</p>
+      <Redes {...redes} negocio="La Tranquera" nota="Ejemplo: en tu sitio, cada ícono lleva a las redes de tu negocio." class="mt-6 flex flex-col items-center" />
+    </footer>
   </div>
 </Base>

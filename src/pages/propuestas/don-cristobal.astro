@@ -4,8 +4,12 @@ import PropuestaBar from "../../components/PropuestaBar.astro";
 import ReservaMesa from "../../components/ReservaMesa.astro";
 import Horarios from "../../components/Horarios.astro";
 import Foto from "../../components/Foto.astro";
+import Redes from "../../components/Redes.astro";
 import Galeria from "../../components/Galeria.astro";
 import { F } from "../../fotos";
+
+// Redes del comercio: pegá el link completo de cada una. Si queda vacía, el ícono se muestra de ejemplo.
+const redes = { instagram: "https://www.instagram.com/bodegondoncristobal/", facebook: "", youtube: "" };
 
 // Dirección, horarios, calificación y foto del frente tomados de su perfil público de Google.
 // Carta, precios y demás fotos de ejemplo.
@@ -110,6 +114,7 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
           <div class="mt-6">
             <Horarios horarios={horarios} />
           </div>
+          <Redes {...redes} negocio="Bodegón Don Cristóbal" nota="Instagram lleva a su cuenta; Facebook y YouTube son de ejemplo." class="mt-8" />
         </div>
         <iframe title="Mapa de Bodegón Don Cristóbal" class="h-80 w-full rounded-2xl border-0" loading="lazy" src="https://www.google.com/maps?q=-36.6180768,-64.2887317&z=17&output=embed"></iframe>
       </div>

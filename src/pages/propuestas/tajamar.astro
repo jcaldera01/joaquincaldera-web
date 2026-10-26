@@ -4,9 +4,13 @@ import PropuestaBar from "../../components/PropuestaBar.astro";
 import Catalogo from "../../components/Catalogo.astro";
 import Horarios from "../../components/Horarios.astro";
 import Foto from "../../components/Foto.astro";
+import Redes from "../../components/Redes.astro";
 import Galeria from "../../components/Galeria.astro";
 import { waLink } from "../../config";
 import { F } from "../../fotos";
+
+// Redes del comercio: pegá el link completo de cada una. Si queda vacía, el ícono se muestra de ejemplo.
+const redes = { instagram: "https://www.instagram.com/armeriaeltajamar/", facebook: "https://www.facebook.com/armeria.eltajamar/", youtube: "" };
 
 // Dirección, horarios, calificación y fotos del local tomados de su ficha de Google.
 // Productos, precios y fotos de productos de ejemplo.
@@ -105,6 +109,7 @@ const productos = [
           <div class="mt-6">
             <Horarios horarios={horarios} />
           </div>
+          <Redes {...redes} negocio="Armería El Tajamar" nota="Instagram y Facebook llevan a sus cuentas; YouTube es de ejemplo." class="mt-8" />
         </div>
         <iframe title="Mapa de Armería El Tajamar" class="h-80 w-full rounded-2xl border-0" loading="lazy" src="https://www.google.com/maps?q=Marcelo+T.+de+Alvear+413,+Santa+Rosa,+La+Pampa&z=16&output=embed"></iframe>
       </div>

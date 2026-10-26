@@ -3,8 +3,12 @@ import Base from "../../layouts/Base.astro";
 import PropuestaBar from "../../components/PropuestaBar.astro";
 import PedidoMenu from "../../components/PedidoMenu.astro";
 import Foto from "../../components/Foto.astro";
+import Redes from "../../components/Redes.astro";
 import Galeria from "../../components/Galeria.astro";
 import { F } from "../../fotos";
+
+// Redes del comercio: pegá el link completo de cada una. Si queda vacía, el ícono se muestra de ejemplo.
+const redes = { instagram: "", facebook: "", youtube: "" };
 
 // Foto del frente tomada de su ficha de Google (subida por el dueño).
 // Carta y fotos de platos de ejemplo: se reemplazan por las reales de Morfis.
@@ -103,6 +107,7 @@ const galeria = [
         <div>
           <h2 class="font-display text-3xl font-bold">Dónde estamos</h2>
           <p class="mt-3 text-black/70">Toay, La Pampa. Retiro en el local o delivery.</p>
+          <Redes {...redes} negocio="Morfis" nota="Íconos de ejemplo: en el sitio real llevan a sus redes." class="mt-8" />
         </div>
         <iframe title="Mapa de Morfis" class="h-64 w-full rounded-2xl border-0" loading="lazy" src="https://www.google.com/maps?q=-36.6755641,-64.3750124&z=16&output=embed"></iframe>
       </div>
