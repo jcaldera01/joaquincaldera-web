@@ -107,6 +107,27 @@ export const F = {
   indumentaria: "photo-1581870789816-1a7d5ea78d61",
   caza: "photo-1611782712936-6247d9711816",
 
+  // Cotos de caza y campo
+  ciervo: "photo-1757858849087-7095a55a0550",
+  ciervoAstas: "photo-1643665338717-9a27bea5bbc6",
+  ciervoCampo: "photo-1543756605-a90da919605a",
+  bufalo: "photo-1619452104266-0d23df2119ac",
+  bufaloAgua: "photo-1626041934397-aa2dbadac561",
+  puma: "photo-1527720255604-b27935ade401",
+  jabali: "photo-1611504262701-8a48422da4a1",
+  jabaliPasto: "photo-1785952638293-06412e0284e9",
+  antilope: "photo-1696337314872-0b7761334117",
+  monte: "photo-1516026672322-bc52d61a55d5",
+  monteAtardecer: "photo-1547471080-7cc2caa01a7e",
+  laguna: "photo-1765810542219-212caa492441",
+  lagunaJuncos: "photo-1581462983172-539a49a6c4af",
+  trofeos: "photo-1782231579679-914a0b273393",
+  living: "photo-1696814543693-31fcf942ccb7",
+  hogar: "photo-1603039531759-1a1bbe4f9f94",
+  habitacion: "photo-1615529162924-f8605388461d",
+  camioneta: "photo-1778539243206-61b0d8c234e5",
+  cazador: "photo-1677939470005-e3266a845311",
+
   // Comercios en general
   duenoCelular: "photo-1687422808248-f807f4ea2a2e",
   mostrador: "photo-1556742049-0cfed4f6a45d",

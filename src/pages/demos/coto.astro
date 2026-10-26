@@ -1,0 +1,204 @@
+---
+import Base from "../../layouts/Base.astro";
+import DemoBar from "../../components/DemoBar.astro";
+import Foto from "../../components/Foto.astro";
+import Redes from "../../components/Redes.astro";
+import Galeria from "../../components/Galeria.astro";
+import Temporadas from "../../components/Temporadas.astro";
+import ConsultaEstadia from "../../components/ConsultaEstadia.astro";
+import { F } from "../../fotos";
+
+// Redes del comercio: pegá el link completo de cada una. Si queda vacía, el ícono se muestra de ejemplo.
+const redes = { instagram: "", facebook: "", youtube: "" };
+
+const datos = [
+  ["2.400 ha", "de monte de caldén"],
+  ["8", "cazadores por vez"],
+  ["1 guía", "por cazador"],
+  ["Laguna", "propia"],
+];
+
+const especies = [
+  { nombre: "Ciervo colorado", img: F.ciervo, temporada: "Marzo a agosto", texto: "Rececho a pie. En la brama, a la escucha del bramido al amanecer." },
+  { nombre: "Jabalí", img: F.jabali, temporada: "Todo el año", texto: "Apostadero en noches de luna o rececho en las primeras horas." },
+  { nombre: "Antílope negro", img: F.antilope, temporada: "Todo el año", texto: "Rececho en los abiertos, con tiros largos y mucho largavista." },
+  { nombre: "Puma", img: F.puma, temporada: "Todo el año", texto: "Acecho en las aguadas, con guía especializado." },
+];
+
+const temporadas = [
+  { nombre: "Ciervo colorado", meses: [[3, 8]] as [number, number][], destacado: { meses: [3, 4] as [number, number], etiqueta: "Brama" } },
+  { nombre: "Jabalí", meses: [[1, 12]] as [number, number][] },
+  { nombre: "Antílope negro", meses: [[1, 12]] as [number, number][] },
+  { nombre: "Puma", meses: [[1, 12]] as [number, number][] },
+  { nombre: "Patos en la laguna", detalle: "Caza menor", meses: [[5, 8]] as [number, number][] },
+];
+
+const jornada = [
+  ["5:30", "Mate en el casco y salida al campo"],
+  ["6:00", "Rececho con tu guía hasta media mañana"],
+  ["13:00", "Asado de campo y siesta"],
+  ["17:00", "Salida de la tarde o apostadero"],
+  ["21:30", "Cena junto al hogar"],
+];
+
+const casco = [
+  "4 habitaciones dobles con baño privado",
+  "Pensión completa: cocina de campo y asado con leña de caldén",
+  "Living con hogar a leña y wifi satelital",
+  "Traslado desde Santa Rosa o el aeropuerto",
+  "Cámara de frío, desposte y preparación del trofeo",
+  "Ayuda con la licencia de caza y las guías provinciales",
+];
+
+const fotosCasco = [
+  { src: F.living, alt: "Living del casco con hogar" },
+  { src: F.habitacion, alt: "Habitación doble" },
+  { src: F.parrillaFuego, alt: "Asado a la leña" },
+  { src: F.trofeos, alt: "Trofeos en la pared del quincho" },
+  { src: F.laguna, alt: "Atardecer en la laguna" },
+];
+---
+
+<Base title="Las Libélulas | Coto de caza en La Pampa (demo)" description="Demo de sitio web para coto de caza: especies, temporadas, alojamiento y consulta de fechas por WhatsApp.">
+  <DemoBar rubro="coto de caza" />
+
+  <div class="bg-[#f6f2ea] text-[#1f2a22]" style="--accent:#a8692a;--accent-dark:#1f2a22;--soft:#efe7da">
+    <header class="relative overflow-hidden bg-[#1f2a22] text-[#f6f2ea]">
+      <Foto src={F.monte} alt="" ancho={1800} eager class="absolute inset-0 h-full w-full object-cover opacity-60" />
+      <div class="absolute inset-0 bg-gradient-to-t from-[#1f2a22] via-[#1f2a22]/60 to-[#1f2a22]/20"></div>
+      <div class="relative mx-auto max-w-5xl px-4 pt-24 pb-28 md:pt-36 md:pb-36">
+        <div class="flex items-center gap-2 text-[#e0b27a]">
+          <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+            <path d="M12 6v15" stroke-linecap="round" />
+            <circle cx="12" cy="4.5" r="1.5" />
+            <ellipse cx="7" cy="8" rx="5" ry="1.8" transform="rotate(-12 7 8)" />
+            <ellipse cx="17" cy="8" rx="5" ry="1.8" transform="rotate(12 17 8)" />
+            <ellipse cx="7.5" cy="11.5" rx="4.2" ry="1.5" transform="rotate(10 7.5 11.5)" />
+            <ellipse cx="16.5" cy="11.5" rx="4.2" ry="1.5" transform="rotate(-10 16.5 11.5)" />
+          </svg>
+          <p class="text-sm font-semibold tracking-[0.25em] uppercase">Coto de caza · La Pampa</p>
+        </div>
+        <h1 class="font-display mt-3 text-5xl font-bold md:text-7xl">Las Libélulas</h1>
+        <p class="mt-4 max-w-xl text-lg text-[#f6f2ea]/85">Ciervo colorado, jabalí y antílope en el monte pampeano. Cazá con guía propio y descansá en un casco con hogar, asado y vista a la laguna.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#consulta" class="btn bg-(--accent) text-white hover:brightness-110">Consultar fechas</a>
+          <a href="#especies" class="btn border border-white/40 text-white hover:bg-white/10">Ver especies</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="relative mx-auto -mt-12 max-w-5xl px-4">
+      <dl class="grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-black/10 shadow-lg md:grid-cols-4">
+        {datos.map(([n, t]) => (
+          <div class="bg-white p-5 text-center">
+            <dt class="font-display text-2xl font-bold text-(--accent)">{n}</dt>
+            <dd class="text-sm text-black/60">{t}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <section class="mx-auto grid max-w-5xl items-center gap-10 px-4 py-16 md:grid-cols-2">
+      <div>
+        <h2 class="font-display text-3xl font-bold">El campo</h2>
+        <p class="mt-4 text-black/70">Las Libélulas son 2.400 hectáreas de monte de caldén, médanos y abiertos, con una laguna permanente que le da el nombre al coto.</p>
+        <p class="mt-3 text-black/70">Hay aguadas en todos los sectores, cuadros sembrados para la fauna y caminos internos para llegar en camioneta a cada zona de caza.</p>
+        <p class="mt-3 text-black/70">Trabajamos con cupos chicos: nunca hay más de ocho cazadores en el campo.</p>
+      </div>
+      <div class="aspect-[4/3] overflow-hidden rounded-3xl bg-(--soft)">
+        <Foto src={F.laguna} alt="La laguna al atardecer" ancho={1000} class="h-full w-full object-cover" />
+      </div>
+    </section>
+
+    <section id="especies" class="scroll-mt-16 bg-white">
+      <div class="mx-auto max-w-5xl px-4 py-16">
+        <h2 class="font-display text-3xl font-bold">Especies</h2>
+        <div class="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+          {especies.map((e) => (
+            <div class="overflow-hidden rounded-2xl bg-[#f6f2ea] ring-1 ring-black/5">
+              <div class="aspect-[4/5] bg-(--soft)">
+                <Foto src={e.img} alt={e.nombre} ancho={500} class="h-full w-full object-cover" />
+              </div>
+              <div class="p-3 sm:p-4">
+                <h3 class="font-semibold">{e.nombre}</h3>
+                <p class="mt-1 text-xs font-semibold text-(--accent) uppercase">{e.temporada}</p>
+                <p class="mt-2 text-sm text-black/65">{e.texto}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-5xl px-4 py-16">
+      <h2 class="font-display text-3xl font-bold">Temporadas</h2>
+      <p class="mt-2 text-black/65">La brama del ciervo colorado es en marzo y abril: es la fecha más pedida, conviene reservar con tiempo.</p>
+      <div class="mt-8">
+        <Temporadas filas={temporadas} nota="Siempre dentro de la temporada oficial de La Pampa." />
+      </div>
+    </section>
+
+    <section class="bg-[#1f2a22] text-[#f6f2ea]">
+      <div class="mx-auto grid max-w-5xl items-center gap-10 px-4 py-16 md:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold">Un día en el coto</h2>
+          <ol class="mt-8 space-y-5 border-l border-white/20 pl-6">
+            {jornada.map(([hora, texto]) => (
+              <li class="relative">
+                <span class="absolute top-1.5 -left-[1.95rem] h-3 w-3 rounded-full bg-(--accent) ring-4 ring-[#1f2a22]"></span>
+                <p class="text-sm font-semibold text-[#e0b27a]">{hora}</p>
+                <p class="mt-0.5">{texto}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+        <div class="aspect-[4/5] overflow-hidden rounded-3xl bg-white/10 md:aspect-[4/5]">
+          <Foto src={F.cazador} alt="Cazador en el campo" ancho={900} class="h-full w-full object-cover" />
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-5xl px-4 py-16">
+      <h2 class="font-display text-3xl font-bold">El casco</h2>
+      <ul class="mt-6 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+        {casco.map((c) => (
+          <li class="flex gap-3">
+            <svg viewBox="0 0 20 20" class="mt-0.5 h-5 w-5 shrink-0 text-(--accent)" fill="currentColor" aria-hidden="true"><path d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0L3.3 9.7a1 1 0 1 1 1.4-1.4l3.8 3.8 6.8-6.8a1 1 0 0 1 1.4 0Z" /></svg>
+            <span class="text-black/75">{c}</span>
+          </li>
+        ))}
+      </ul>
+      <div class="mt-10">
+        <Galeria fotos={fotosCasco} />
+      </div>
+    </section>
+
+    <section id="consulta" class="mx-auto max-w-3xl scroll-mt-16 px-4 pb-16">
+      <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/10 md:p-8">
+        <h2 class="font-display text-2xl font-bold">Consultá tu fecha</h2>
+        <p class="mt-1 text-sm text-black/60">Te respondemos por WhatsApp con disponibilidad y precio.</p>
+        <div class="mt-6">
+          <ConsultaEstadia
+            negocio="Coto Las Libélulas"
+            prefijo="[DEMO]"
+            intereses={["Ciervo colorado", "Jabalí", "Antílope negro", "Puma", "Patos en la laguna"]}
+            personas="Cazadores"
+            maxPersonas={8}
+            acompanantes="Acompañantes que no cazan"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white">
+      <div class="mx-auto grid max-w-5xl gap-8 px-4 py-14 md:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold">Cómo llegar</h2>
+          <p class="mt-3 text-black/70">A 45 km de Santa Rosa, La Pampa. Los últimos 12 km son de tierra: si no venís en camioneta, te buscamos en el asfalto.</p>
+          <Redes {...redes} negocio="Coto Las Libélulas" nota="Ejemplo: en tu sitio, cada ícono lleva a las redes de tu negocio." class="mt-8" />
+        </div>
+        <iframe title="Mapa de la zona" class="h-64 w-full rounded-2xl border-0" loading="lazy" src="https://www.google.com/maps?q=Toay,+La+Pampa&z=9&output=embed"></iframe>
+      </div>
+    </section>
+  </div>
+</Base>

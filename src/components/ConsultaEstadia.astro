@@ -1,0 +1,124 @@
+---
+// Consulta de disponibilidad por WhatsApp: llegada, salida, personas e intereses.
+// Sirve para cotos, cabañas, estancias y alojamientos.
+// Los colores salen de las variables --accent, --accent-dark y --soft del contenedor.
+import { SITE } from "../config";
+
+interface Props {
+  negocio: string;
+  prefijo: string;
+  intereses?: string[]; // botones para marcar qué le interesa (especies, actividades, etc.)
+  tituloIntereses?: string;
+  personas?: string; // cómo se llama a quienes vienen: "Cazadores", "Huéspedes"
+  maxPersonas?: number;
+  acompanantes?: string; // si se pasa, agrega un segundo contador (por ejemplo, quienes no cazan)
+  telefono?: string;
+}
+
+const {
+  negocio,
+  prefijo,
+  intereses = [],
+  tituloIntereses = "¿Qué te interesa?",
+  personas = "Personas",
+  maxPersonas = 10,
+  acompanantes,
+  telefono = SITE.whatsapp,
+} = Astro.props;
+const campo = "mt-2 w-full rounded-xl border border-black/20 bg-white px-3 py-2 font-normal";
+---
+
+<form id="form-estadia" class="grid gap-4 sm:grid-cols-2">
+  <label class="text-sm font-semibold">Llegada
+    <input type="date" name="llegada" required class={campo} />
+  </label>
+  <label class="text-sm font-semibold">Salida
+    <input type="date" name="salida" required class={campo} />
+  </label>
+  <p id="estadia-noches" class="-mt-1 text-sm text-black/60 sm:col-span-2"></p>
+  <label class="text-sm font-semibold">{personas}
+    <select name="personas" class={campo}>
+      {Array.from({ length: maxPersonas }, (_, i) => i + 1).map((n) => <option value={n} selected={n === 2}>{n}</option>)}
+    </select>
+  </label>
+  {acompanantes && (
+    <label class="text-sm font-semibold">{acompanantes}
+      <select name="acompanantes" class={campo}>
+        {Array.from({ length: 7 }, (_, i) => i).map((n) => <option value={n}>{n}</option>)}
+      </select>
+    </label>
+  )}
+  {intereses.length > 0 && (
+    <fieldset class="sm:col-span-2">
+      <legend class="text-sm font-semibold">{tituloIntereses}</legend>
+      <div class="mt-2 flex flex-wrap gap-2">
+        {intereses.map((i) => (
+          <button type="button" data-interes={i} aria-pressed="false" class="rounded-full bg-white px-4 py-2 text-sm font-medium ring-1 ring-black/15 aria-pressed:bg-(--accent-dark) aria-pressed:text-white aria-pressed:ring-(--accent-dark)">{i}</button>
+        ))}
+      </div>
+    </fieldset>
+  )}
+  <label class="text-sm font-semibold sm:col-span-2">Nombre
+    <input name="nombre" required class={campo} />
+  </label>
+  <label class="text-sm font-semibold sm:col-span-2">Comentarios
+    <textarea name="comentario" rows="2" class={campo} placeholder="Experiencia previa, si traés tu arma, preguntas sobre el alojamiento, etc."></textarea>
+  </label>
+  <p id="estadia-error" class="hidden text-sm font-medium text-red-700 sm:col-span-2">La salida tiene que ser después de la llegada.</p>
+  <button type="submit" class="btn-wa text-base sm:col-span-2">Consultar disponibilidad por WhatsApp</button>
+</form>
+
+<script is:inline define:vars={{ telefono, negocio, prefijo, personas, acompanantes }}>
+  const form = document.getElementById("form-estadia");
+  const elegidos = new Set();
+  const iso = (d) => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  const leer = (v) => (v ? new Date(v + "T12:00:00") : null);
+  const largo = (d) => d.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const noches = () => {
+    const a = leer(form.llegada.value);
+    const b = leer(form.salida.value);
+    return a && b ? Math.round((b - a) / 86400000) : 0;
+  };
+
+  form.llegada.min = iso(new Date());
+  form.salida.min = form.llegada.min;
+
+  function render() {
+    if (form.llegada.value) form.salida.min = form.llegada.value;
+    const n = noches();
+    document.getElementById("estadia-noches").textContent = n > 0 ? `${n} ${n === 1 ? "noche" : "noches"}` : "";
+    if (n > 0) document.getElementById("estadia-error").classList.add("hidden");
+  }
+  form.addEventListener("change", render);
+
+  form.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-interes]");
+    if (!b) return;
+    const activo = b.getAttribute("aria-pressed") !== "true";
+    b.setAttribute("aria-pressed", activo ? "true" : "false");
+    activo ? elegidos.add(b.dataset.interes) : elegidos.delete(b.dataset.interes);
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const n = noches();
+    if (n <= 0) {
+      document.getElementById("estadia-error").classList.remove("hidden");
+      return;
+    }
+    const f = new FormData(form);
+    const texto = [
+      `*${prefijo} Consulta para ${negocio}*`,
+      `Llegada: ${largo(leer(f.get("llegada")))}`,
+      `Salida: ${largo(leer(f.get("salida")))} (${n} ${n === 1 ? "noche" : "noches"})`,
+      `${personas}: ${f.get("personas")}`,
+      acompanantes ? `${acompanantes}: ${f.get("acompanantes")}` : null,
+      elegidos.size ? `Me interesa: ${[...elegidos].join(", ")}` : null,
+      `Nombre: ${f.get("nombre")}`,
+      f.get("comentario") ? `Comentarios: ${f.get("comentario")}` : null,
+    ]
+      .filter((l) => l !== null)
+      .join("\n");
+    window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(texto)}`, "_blank");
+  });
+</script>

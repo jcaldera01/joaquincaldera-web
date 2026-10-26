@@ -1,0 +1,176 @@
+---
+import Base from "../../layouts/Base.astro";
+import PropuestaBar from "../../components/PropuestaBar.astro";
+import Foto from "../../components/Foto.astro";
+import Redes from "../../components/Redes.astro";
+import Galeria from "../../components/Galeria.astro";
+import Temporadas from "../../components/Temporadas.astro";
+import ConsultaEstadia from "../../components/ConsultaEstadia.astro";
+import { F } from "../../fotos";
+
+// Redes del comercio: pegá el link completo de cada una. Si queda vacía, el ícono se muestra de ejemplo.
+const redes = { instagram: "https://www.instagram.com/coto.elchillen/", facebook: "", youtube: "" };
+
+// Datos públicos: registro provincial N.º 13 y departamento Toay (listado de cotos inscriptos de Recursos Naturales),
+// "a 60 km de Quehué" (InterPatagonia), tipo de monte, especies y modalidades (notas de Marcelo Vassia en la revista Cazador).
+// Temporadas, servicios, alojamiento y todas las fotos son de ejemplo.
+const datos = [
+  ["N.º 13", "coto registrado en La Pampa"],
+  ["Toay", "a 60 km de Quehué"],
+  ["Brama", "de ciervo colorado"],
+  ["Búfalos", "en libertad"],
+];
+
+const campo = [
+  { titulo: "Medanales y caldenadas", texto: "Médanos abiertos con caldenes en las hondonadas, y cerros desde donde se recorre el campo con largavista.", img: F.monte },
+  { titulo: "Monte cerrado", texto: "Caldenal abierto, monte cerrado con fachinal y cuadros sembrados para la fauna.", img: F.monteAtardecer },
+  { titulo: "Abrevaderos", texto: "Aguadas permanentes para la fauna silvestre, donde los animales se acercan a tomar agua de noche.", img: F.bufaloAgua },
+];
+
+const especies = [
+  { nombre: "Ciervo colorado", img: F.ciervoCampo, texto: "Un campo histórico de brama: en marzo y abril el monte se llena de bramidos." },
+  { nombre: "Búfalo asiático", img: F.bufalo, texto: "Viven en total libertad en el monte, sin manejo, y se buscan en los cuadros más cerrados." },
+  { nombre: "Puma", img: F.puma, texto: "Presencia habitual de machos adultos y hembras. Se caza al acecho, de noche, en los abrevaderos." },
+];
+
+const temporadas = [
+  { nombre: "Ciervo colorado", meses: [[3, 8]] as [number, number][], destacado: { meses: [3, 4] as [number, number], etiqueta: "Brama" } },
+  { nombre: "Búfalo asiático", meses: [[1, 12]] as [number, number][] },
+  { nombre: "Puma", meses: [[1, 12]] as [number, number][] },
+];
+
+const estadia = ["Alojamiento en el casco", "Comidas caseras y asado", "Guía en cada salida", "Traslado desde Santa Rosa", "Desposte y cuidado del trofeo"];
+
+const fotosEstadia = [
+  { src: F.living, alt: "Living con hogar" },
+  { src: F.habitacion, alt: "Habitación" },
+  { src: F.parrillaFuego, alt: "Asado a la leña" },
+];
+---
+
+<Base title="Coto El Chillén | Caza en La Pampa (propuesta)" description="Propuesta de sitio web para el Coto El Chillén: especies, temporadas, estadía y consulta de fechas por WhatsApp." noindex>
+  <PropuestaBar negocio="Coto El Chillén" />
+
+  <div class="bg-[#f7f2ea] text-[#2a2118]" style="--accent:#8c3b22;--accent-dark:#2a2118;--soft:#ece3d6">
+    <header class="relative overflow-hidden bg-[#2a2118] text-[#f7f2ea]">
+      <Foto src={F.ciervoAstas} alt="" ancho={1800} eager class="absolute inset-0 h-full w-full object-cover opacity-50" />
+      <div class="absolute inset-0 bg-gradient-to-r from-[#2a2118] via-[#2a2118]/80 to-[#2a2118]/20"></div>
+      <div class="relative mx-auto max-w-5xl px-4 pt-24 pb-28 md:pt-32 md:pb-36">
+        <p class="text-sm font-semibold tracking-[0.2em] text-[#d9a77c] uppercase">Coto de caza · Toay, La Pampa</p>
+        <h1 class="font-display mt-3 text-6xl font-bold md:text-7xl">El Chillén</h1>
+        <p class="mt-4 max-w-xl text-lg text-[#f7f2ea]/85">Un coto histórico del monte pampeano. Ciervo colorado en brama, búfalos en libertad y recechos que se ganan a pie.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#consulta" class="btn bg-(--accent) text-white hover:brightness-110">Consultar fechas</a>
+          <a href={redes.instagram} target="_blank" rel="noopener" class="btn border border-white/40 text-white hover:bg-white/10">Ver Instagram</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="relative mx-auto -mt-12 max-w-5xl px-4">
+      <dl class="grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-black/10 shadow-lg md:grid-cols-4">
+        {datos.map(([n, t]) => (
+          <div class="bg-white p-5 text-center">
+            <dt class="font-display text-2xl font-bold text-(--accent)">{n}</dt>
+            <dd class="text-sm text-black/60">{t}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="mt-4 text-sm text-black/55">Registro, ubicación, monte y especies son datos públicos del coto. Temporadas, servicios y fotos son de ejemplo.</p>
+    </div>
+
+    <section class="mx-auto max-w-5xl px-4 py-16">
+      <h2 class="font-display text-3xl font-bold">El campo</h2>
+      <p class="mt-3 max-w-2xl text-black/70">Monte pampeano de verdad, variado y exigente: acá los recechos son difíciles y por eso se disfrutan.</p>
+      <div class="mt-8 grid gap-4 md:grid-cols-3">
+        {campo.map((c) => (
+          <div class="overflow-hidden rounded-2xl bg-white ring-1 ring-black/5">
+            <div class="aspect-[16/10] bg-(--soft)">
+              <Foto src={c.img} alt={c.titulo} ancho={700} class="h-full w-full object-cover" />
+            </div>
+            <div class="p-5">
+              <h3 class="font-semibold">{c.titulo}</h3>
+              <p class="mt-2 text-sm text-black/65">{c.texto}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="bg-[#2a2118] text-[#f7f2ea]">
+      <div class="mx-auto max-w-5xl px-4 py-16">
+        <h2 class="font-display text-3xl font-bold">Especies</h2>
+        <div class="mt-8 grid gap-4 md:grid-cols-3">
+          {especies.map((e) => (
+            <div class="overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/10">
+              <div class="aspect-[4/3] bg-white/10">
+                <Foto src={e.img} alt={e.nombre} ancho={700} class="h-full w-full object-cover" />
+              </div>
+              <div class="p-5">
+                <h3 class="font-display text-xl font-bold">{e.nombre}</h3>
+                <p class="mt-2 text-sm text-[#f7f2ea]/75">{e.texto}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div class="mt-10 grid gap-4 md:grid-cols-2">
+          <div class="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
+            <h3 class="font-semibold text-[#d9a77c]">Rececho</h3>
+            <p class="mt-2 text-[#f7f2ea]/80">Salida de madrugada, recorrida de las alturas con largavista y aproximación a pie, con el viento de frente.</p>
+          </div>
+          <div class="rounded-2xl bg-white/5 p-6 ring-1 ring-white/10">
+            <h3 class="font-semibold text-[#d9a77c]">Acecho</h3>
+            <p class="mt-2 text-[#f7f2ea]/80">Espera en silencio junto a los abrevaderos, de noche, hasta que la presa se acerca a tomar agua.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-5xl px-4 py-16">
+      <h2 class="font-display text-3xl font-bold">Temporadas</h2>
+      <div class="mt-8">
+        <Temporadas filas={temporadas} nota="Fechas de ejemplo. En el sitio real van las del coto, dentro de la temporada oficial de La Pampa." />
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-5xl px-4 pb-16">
+      <h2 class="font-display text-3xl font-bold">La estadía</h2>
+      <div class="mt-4 flex flex-wrap gap-2">
+        {estadia.map((s) => <span class="rounded-full bg-white px-4 py-2 text-sm ring-1 ring-black/10">{s}</span>)}
+      </div>
+      <div class="mt-8">
+        <Galeria fotos={fotosEstadia} nota="Servicios y fotos de ejemplo. En el sitio real van los del coto, con las fotos de su Instagram." />
+      </div>
+    </section>
+
+    <section id="consulta" class="mx-auto max-w-3xl scroll-mt-16 px-4 pb-16">
+      <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/10 md:p-8">
+        <h2 class="font-display text-2xl font-bold">Consultá tu fecha</h2>
+        <p class="mt-1 text-sm text-black/60">Te respondemos por WhatsApp con disponibilidad y precio.</p>
+        <div class="mt-6">
+          <ConsultaEstadia
+            negocio="Coto El Chillén"
+            prefijo="[PROPUESTA]"
+            intereses={["Ciervo colorado", "Búfalo", "Puma"]}
+            personas="Cazadores"
+            maxPersonas={6}
+            acompanantes="Acompañantes que no cazan"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white">
+      <div class="mx-auto grid max-w-5xl gap-8 px-4 py-14 md:grid-cols-2">
+        <div>
+          <h2 class="font-display text-3xl font-bold">Dónde estamos</h2>
+          <p class="mt-3 text-black/70">Departamento Toay, La Pampa, a 60 km de Quehué.</p>
+          <Redes {...redes} negocio="Coto El Chillén" nota="Instagram lleva a su cuenta; Facebook y YouTube son de ejemplo." class="mt-8" />
+        </div>
+        <div>
+          <iframe title="Mapa de la zona de Quehué" class="h-64 w-full rounded-2xl border-0" loading="lazy" src="https://www.google.com/maps?q=Quehu%C3%A9,+La+Pampa&z=9&output=embed"></iframe>
+          <p class="mt-2 text-xs text-black/50">Ubicación aproximada.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
