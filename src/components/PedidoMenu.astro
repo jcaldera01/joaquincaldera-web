@@ -17,10 +17,11 @@ interface Props {
   negocio: string;
   prefijo: string;
   envio?: number;
+  propinas?: number[]; // montos de los botones de propina; [] la saca
   telefono?: string;
 }
 
-const { menu, negocio, prefijo, envio = 0, telefono = SITE.whatsapp } = Astro.props;
+const { menu, negocio, prefijo, envio = 0, propinas = [500, 1000, 1500, 2000], telefono = SITE.whatsapp } = Astro.props;
 const precios = Object.fromEntries(menu.flatMap((c) => c.items.map((i) => [i.id, { nombre: i.nombre, precio: i.precio }])));
 const fmt = (n: number) => n.toLocaleString("es-AR");
 ---
@@ -61,25 +62,50 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
     <h2 class="font-display text-2xl font-bold text-(--accent-dark)">Tu pedido</h2>
     <ul id="resumen" class="mt-4 space-y-1 text-sm"></ul>
     <p id="vacio" class="mt-4 text-sm text-black/55">Todavía no agregaste nada.</p>
-    <form id="form-pedido" class="mt-6 grid gap-4 sm:grid-cols-2">
+    <form id="form-pedido" class="mt-6 grid gap-5 sm:grid-cols-2">
       <label class="text-sm font-medium">Nombre
         <input name="nombre" required class="mt-1 w-full rounded-xl border border-black/15 px-3 py-2" />
       </label>
       <fieldset class="text-sm font-medium">
         <legend>Entrega</legend>
-        <div class="mt-2 flex gap-4 font-normal">
-          <label class="flex items-center gap-2"><input type="radio" name="entrega" value="retiro" checked /> Retiro en el local</label>
-          <label class="flex items-center gap-2"><input type="radio" name="entrega" value="delivery" /> Delivery</label>
+        <div class="mt-1 grid grid-cols-2 gap-2 font-normal">
+          <label class="flex cursor-pointer items-start gap-2 rounded-xl p-3 ring-1 ring-black/15 has-checked:bg-(--soft) has-checked:ring-2 has-checked:ring-(--accent)">
+            <input type="radio" name="entrega" value="retiro" checked class="mt-0.5 accent-(--accent)" />
+            <span><span class="block font-semibold">Retiro</span><span class="text-black/55">Sin cargo</span></span>
+          </label>
+          <label class="flex cursor-pointer items-start gap-2 rounded-xl p-3 ring-1 ring-black/15 has-checked:bg-(--soft) has-checked:ring-2 has-checked:ring-(--accent)">
+            <input type="radio" name="entrega" value="delivery" class="mt-0.5 accent-(--accent)" />
+            <span><span class="block font-semibold">Delivery</span><span class="text-black/55">{envio ? `+$${fmt(envio)}` : "Te lo llevamos"}</span></span>
+          </label>
         </div>
       </fieldset>
-      <label class="text-sm font-medium sm:col-span-2">Dirección (si es delivery)
-        <input name="direccion" class="mt-1 w-full rounded-xl border border-black/15 px-3 py-2" />
+      <label id="campo-direccion" class="hidden text-sm font-medium sm:col-span-2">Dirección
+        <input name="direccion" class="mt-1 w-full rounded-xl border border-black/15 px-3 py-2" placeholder="Calle, número y alguna referencia" />
       </label>
       <label class="text-sm font-medium sm:col-span-2">Comentarios
         <textarea name="comentario" rows="2" class="mt-1 w-full rounded-xl border border-black/15 px-3 py-2" placeholder="Sin cebolla, paga con efectivo, etc."></textarea>
       </label>
+      {propinas.length > 0 && (
+        <fieldset class="sm:col-span-2">
+          <legend class="text-sm font-medium">¿Querés dejar propina?</legend>
+          <p id="propina-para" class="text-sm text-black/55">Va completa para el equipo.</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            {[0, ...propinas].map((m) => (
+              <button type="button" data-propina={m} aria-pressed={m === 0 ? "true" : "false"} class="rounded-full bg-black/5 px-4 py-2 text-sm font-semibold aria-pressed:bg-(--accent-dark) aria-pressed:text-white">${fmt(m)}</button>
+            ))}
+            <button type="button" data-propina="otro" aria-pressed="false" class="rounded-full bg-black/5 px-4 py-2 text-sm font-semibold aria-pressed:bg-(--accent-dark) aria-pressed:text-white">Otro</button>
+          </div>
+          <div id="campo-propina" class="mt-3 hidden max-w-48">
+            <label class="text-sm font-medium">Monto de la propina
+              <span class="mt-1 flex items-center rounded-xl border border-black/15 px-3 focus-within:ring-2 focus-within:ring-(--accent)">$
+                <input name="propina" type="number" min="0" inputmode="numeric" class="w-full py-2 pl-1 outline-none" />
+              </span>
+            </label>
+          </div>
+        </fieldset>
+      )}
       <p id="error-pedido" class="hidden text-sm font-medium text-red-700 sm:col-span-2">Agregá al menos un producto.</p>
-      <button class="btn-wa sm:col-span-2" type="submit">Enviar pedido por WhatsApp</button>
+      <button id="boton-enviar" class="btn-wa text-base sm:col-span-2" type="submit">Enviar pedido por WhatsApp</button>
     </form>
   </section>
 </div>
@@ -91,54 +117,90 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
 
 <script is:inline define:vars={{ precios, telefono, envio, negocio, prefijo }}>
   const carrito = {};
+  let propina = 0;
+  let pedidoEnPantalla = false;
+  const form = document.getElementById("form-pedido");
   const fmt = (n) => n.toLocaleString("es-AR");
-  const total = () => Object.entries(carrito).reduce((s, [id, c]) => s + precios[id].precio * c, 0);
+  const subtotal = () => Object.entries(carrito).reduce((s, [id, c]) => s + precios[id].precio * c, 0);
+  const esDelivery = () => form.entrega.value === "delivery";
+  const costoEnvio = () => (esDelivery() ? envio : 0);
+  const total = () => subtotal() + costoEnvio() + propina;
+  const fila = (texto, monto, clase = "") => `<li class="flex justify-between ${clase}"><span>${texto}</span><span>$${fmt(monto)}</span></li>`;
 
   function render() {
     const cantidad = Object.values(carrito).reduce((a, b) => a + b, 0);
     document.querySelectorAll("[data-cant]").forEach((el) => (el.textContent = carrito[el.dataset.cant] || 0));
     document.getElementById("items-total").textContent = cantidad;
     document.getElementById("monto-total").textContent = fmt(total());
+    document.getElementById("boton-enviar").textContent = cantidad ? `Enviar pedido · $${fmt(total())}` : "Enviar pedido por WhatsApp";
     const barra = document.getElementById("barra-total");
-    barra.classList.toggle("hidden", cantidad === 0);
-    barra.classList.toggle("flex", cantidad > 0);
+    const verBarra = cantidad > 0 && !pedidoEnPantalla;
+    barra.classList.toggle("hidden", !verBarra);
+    barra.classList.toggle("flex", verBarra);
     document.getElementById("vacio").classList.toggle("hidden", cantidad > 0);
     if (cantidad) document.getElementById("error-pedido").classList.add("hidden");
-    document.getElementById("resumen").innerHTML =
-      Object.entries(carrito)
-        .map(([id, c]) => `<li class="flex justify-between"><span>${c} × ${precios[id].nombre}</span><span>$${fmt(precios[id].precio * c)}</span></li>`)
-        .join("") +
-      (cantidad ? `<li class="flex justify-between border-t border-black/10 pt-2 font-semibold"><span>Total</span><span>$${fmt(total())}</span></li>` : "");
+    const extras = [costoEnvio() ? fila("Envío", costoEnvio()) : "", propina ? fila("Propina", propina) : ""].join("");
+    document.getElementById("resumen").innerHTML = cantidad
+      ? Object.entries(carrito).map(([id, c]) => fila(`${c} × ${precios[id].nombre}`, precios[id].precio * c)).join("") +
+        (extras ? fila("Subtotal", subtotal(), "border-t border-black/10 pt-2 text-black/60") + extras : "") +
+        fila("Total", total(), "border-t border-black/10 pt-2 text-base font-semibold")
+      : "";
+    const direccion = document.getElementById("campo-direccion");
+    direccion.classList.toggle("hidden", !esDelivery());
+    form.direccion.required = esDelivery();
+    const para = document.getElementById("propina-para");
+    if (para) para.textContent = esDelivery() ? "Va completa para quien te lleva el pedido." : "Va completa para el equipo.";
   }
 
   document.addEventListener("click", (e) => {
     const mas = e.target.closest("[data-mas]");
     const menos = e.target.closest("[data-menos]");
+    const boton = e.target.closest("[data-propina]");
     if (mas) carrito[mas.dataset.mas] = (carrito[mas.dataset.mas] || 0) + 1;
     if (menos && carrito[menos.dataset.menos]) {
       carrito[menos.dataset.menos] -= 1;
       if (!carrito[menos.dataset.menos]) delete carrito[menos.dataset.menos];
     }
-    if (mas || menos) render();
+    if (boton) {
+      document.querySelectorAll("[data-propina]").forEach((b) => b.setAttribute("aria-pressed", b === boton ? "true" : "false"));
+      const otro = boton.dataset.propina === "otro";
+      document.getElementById("campo-propina").classList.toggle("hidden", !otro);
+      propina = otro ? Math.max(0, Number(form.propina.value) || 0) : Number(boton.dataset.propina);
+      if (otro) form.propina.focus();
+    }
+    if (mas || menos || boton) render();
   });
 
-  document.getElementById("form-pedido").addEventListener("submit", (e) => {
+  form.addEventListener("change", render);
+  form.addEventListener("input", (e) => {
+    if (e.target.name !== "propina") return;
+    propina = Math.max(0, Number(e.target.value) || 0);
+    render();
+  });
+
+  // La barra de abajo se esconde mientras se ve el formulario, para que no tape el botón de enviar.
+  new IntersectionObserver(([entrada]) => {
+    pedidoEnPantalla = entrada.isIntersecting;
+    render();
+  }).observe(form);
+
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
     if (!Object.keys(carrito).length) {
       document.getElementById("error-pedido").classList.remove("hidden");
       return;
     }
-    const d = new FormData(e.target);
-    const delivery = d.get("entrega") === "delivery";
+    const d = new FormData(form);
     const lineas = Object.entries(carrito).map(([id, c]) => `• ${c} × ${precios[id].nombre} — $${fmt(precios[id].precio * c)}`);
     const texto = [
       `*${prefijo} Pedido para ${negocio}*`,
       ...lineas,
-      delivery && envio ? `• Envío — $${fmt(envio)}` : null,
-      `*Total: $${fmt(total() + (delivery ? envio : 0))}*`,
+      costoEnvio() ? `• Envío — $${fmt(costoEnvio())}` : null,
+      propina ? `• Propina — $${fmt(propina)}` : null,
+      `*Total: $${fmt(total())}*`,
       "",
       `Nombre: ${d.get("nombre")}`,
-      delivery ? `Delivery a: ${d.get("direccion") || "(sin dirección)"}` : "Retiro en el local",
+      esDelivery() ? `Delivery a: ${d.get("direccion")}` : "Retiro en el local",
       d.get("comentario") ? `Comentarios: ${d.get("comentario")}` : null,
     ]
       .filter((l) => l !== null)
