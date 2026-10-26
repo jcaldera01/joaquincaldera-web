@@ -1,0 +1,192 @@
+---
+import Base from "../../layouts/Base.astro";
+import PropuestaBar from "../../components/PropuestaBar.astro";
+import Horarios from "../../components/Horarios.astro";
+import Foto from "../../components/Foto.astro";
+import Redes from "../../components/Redes.astro";
+import { waLink } from "../../config";
+import { F } from "../../fotos";
+
+// Redes del comercio: pegá el link completo de cada una. Si queda vacía, el ícono se muestra de ejemplo.
+const redes = { instagram: "https://www.instagram.com/alfa_gym/", facebook: "", youtube: "" };
+
+// De su ficha de Google: dirección, ubicación, calificación, horario del lunes, accesibilidad y la foto del frente (subida por el dueño).
+// El Instagram y los lemas ("Más que un gimnasio", "Cambiá tu manera de entrenar") se leen en su vidriera.
+// El resto de los horarios, los espacios, planes, precios y demás fotos son de ejemplo.
+const ubicacion = { lat: -36.6755592, lng: -64.3820536 };
+
+const galeria = [
+  { src: F.gymMaquinas, alt: "Sala de máquinas", clase: "col-span-2 row-span-2" },
+  { src: F.barra, alt: "Levantamiento con barra", clase: "row-span-2" },
+  { src: F.mancuerna, alt: "Mancuernas", clase: "" },
+  { src: F.funcional, alt: "Funcional con cajones", clase: "" },
+  { src: F.cintas, alt: "Cintas y bicicletas", clase: "col-span-2" },
+  { src: F.kettlebell, alt: "Pesas rusas", clase: "" },
+  { src: F.levantamiento, alt: "Entrenamiento de fuerza", clase: "row-span-2" },
+  { src: F.entrenamientoPareja, alt: "Entrenando de a dos", clase: "" },
+  { src: F.gymOscuro, alt: "El gimnasio de noche", clase: "col-span-2" },
+];
+
+const espacios = [
+  { nombre: "Musculación", texto: "Máquinas, barras, discos y mancuernas para trabajar a tu ritmo.", img: F.gymEquipos },
+  { nombre: "Funcional", texto: "Circuitos con cajones, sogas y pesas rusas.", img: F.sogas },
+  { nombre: "Cardio", texto: "Cintas y bicicletas para entrar en calor o hacer aeróbico.", img: F.cintas },
+];
+
+const horarios: [string, string][][] = [
+  [],
+  [["06:00", "22:00"]],
+  [["06:00", "22:00"]],
+  [["06:00", "22:00"]],
+  [["06:00", "22:00"]],
+  [["06:00", "22:00"]],
+  [["09:00", "13:00"]],
+];
+
+const planes = [
+  { nombre: "Pase libre", precio: "$30.000", detalle: "por mes, todos los días" },
+  { nombre: "3 veces por semana", precio: "$24.000", detalle: "por mes" },
+  { nombre: "Clase suelta", precio: "$4.000", detalle: "para probar" },
+];
+---
+
+<Base title="Alfa Gym | Gimnasio en Toay (propuesta)" description="Propuesta de sitio web para Alfa Gym: galería del gimnasio, horarios, planes y consultas por WhatsApp." noindex>
+  <PropuestaBar negocio="Alfa Gym" />
+
+  <div class="bg-[#f4f4f2] text-[#141414]" style="--accent:#d4a24c;--accent-dark:#141414;--soft:#e9e9e4">
+    <header class="relative overflow-hidden bg-[#141414] text-white">
+      <Foto src={F.gymOscuro} alt="" ancho={1800} eager class="absolute inset-0 h-full w-full object-cover opacity-25" />
+      <div class="relative mx-auto grid max-w-5xl items-center gap-10 px-4 py-14 md:grid-cols-2 md:py-20">
+        <div>
+          <p class="text-sm font-semibold tracking-[0.3em] text-(--accent) uppercase">Gimnasio · Toay</p>
+          <h1 class="mt-3 text-6xl font-black tracking-tight uppercase md:text-7xl">Alfa Gym</h1>
+          <p class="mt-4 text-2xl font-bold">Más que un gimnasio.</p>
+          <p class="mt-2 max-w-md text-white/75">Cambiá tu manera de entrenar: fuerza, funcional y cardio en Urquiza 559, cerca de casa.</p>
+          <div class="mt-6 flex flex-wrap items-center gap-3">
+            <a href={waLink("[PROPUESTA] Hola, quiero consultar por los planes de Alfa Gym.")} target="_blank" rel="noopener" class="btn-wa">Consultar por WhatsApp</a>
+            <a href="#galeria" class="btn border border-white/40 text-white hover:bg-white/10">Ver el gym</a>
+          </div>
+          <p class="mt-5 inline-flex rounded-full bg-white/10 px-3 py-1.5 text-sm">★ 4,9 en Google</p>
+        </div>
+        <div class="aspect-[1200/733] overflow-hidden rounded-3xl bg-white/10 shadow-2xl ring-1 ring-white/15">
+          <Foto src="/propuestas/alfa-gym/fachada.jpg" alt="Frente de Alfa Gym" eager class="h-full w-full object-cover" />
+        </div>
+      </div>
+    </header>
+
+    <section id="galeria" class="mx-auto max-w-5xl scroll-mt-16 px-4 py-14">
+      <div class="flex flex-wrap items-end justify-between gap-2">
+        <h2 class="text-3xl font-black uppercase">El gym</h2>
+        <p class="text-sm text-black/55">Tocá una foto para verla grande</p>
+      </div>
+      <div class="mt-6 grid grid-flow-dense auto-rows-[8.5rem] grid-cols-2 gap-2 sm:auto-rows-[11rem] sm:gap-3 md:grid-cols-4">
+        {galeria.map((f, i) => (
+          <button type="button" data-foto={i} class={`group overflow-hidden rounded-2xl bg-(--soft) ${f.clase}`} aria-label={`Ver foto: ${f.alt}`}>
+            <Foto src={f.src} alt={f.alt} ancho={f.clase.includes("col-span-2") ? 1200 : 700} class="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+          </button>
+        ))}
+      </div>
+      <p class="mt-3 text-sm text-black/55">La foto del frente (arriba) es de su ficha de Google; las de esta galería son de ejemplo. En el sitio real van fotos del salón, las máquinas y la gente entrenando.</p>
+    </section>
+
+    <section class="bg-[#141414] text-white">
+      <div class="mx-auto max-w-5xl px-4 py-14">
+        <h2 class="text-3xl font-black uppercase">Qué podés hacer</h2>
+        <div class="mt-6 grid gap-4 md:grid-cols-3">
+          {espacios.map((e) => (
+            <div class="relative flex h-56 items-end overflow-hidden rounded-2xl bg-white/10 p-5">
+              <Foto src={e.img} alt="" ancho={700} class="absolute inset-0 h-full w-full object-cover opacity-60" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent"></div>
+              <div class="relative">
+                <h3 class="text-xl font-bold text-(--accent)">{e.nombre}</h3>
+                <p class="mt-1 text-sm text-white/80">{e.texto}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p class="mt-4 text-sm text-white/50">Espacios de ejemplo: se completan con lo que ofrece el gym.</p>
+      </div>
+    </section>
+
+    <section class="mx-auto grid max-w-5xl gap-10 px-4 py-14 md:grid-cols-2">
+      <div>
+        <h2 class="text-3xl font-black uppercase">Planes</h2>
+        <div class="mt-6 space-y-3">
+          {planes.map((p) => (
+            <div class="flex items-center justify-between gap-4 rounded-2xl bg-white p-5 ring-1 ring-black/10">
+              <div>
+                <p class="font-bold">{p.nombre}</p>
+                <p class="text-sm text-black/55">{p.detalle}</p>
+              </div>
+              <p class="text-2xl font-black">{p.precio}</p>
+            </div>
+          ))}
+        </div>
+        <p class="mt-3 text-sm text-black/55">Planes y precios de ejemplo.</p>
+        <a href={waLink("[PROPUESTA] Hola, quiero coordinar para ir a conocer Alfa Gym.")} target="_blank" rel="noopener" class="btn-wa mt-6">Coordinar mi primera visita</a>
+      </div>
+      <div>
+        <h2 class="text-3xl font-black uppercase">Horarios</h2>
+        <div class="mt-6 rounded-2xl bg-white p-5 ring-1 ring-black/10">
+          <Horarios horarios={horarios} />
+        </div>
+        <p class="mt-3 text-sm text-black/55">En su ficha de Google figura el lunes de 6 a 22 h; los demás días son de ejemplo.</p>
+      </div>
+    </section>
+
+    <section class="bg-white">
+      <div class="mx-auto grid max-w-5xl gap-8 px-4 py-14 md:grid-cols-2">
+        <div>
+          <h2 class="text-3xl font-black uppercase">Dónde estamos</h2>
+          <p class="mt-3 text-black/70">Urquiza 559, Toay, La Pampa.</p>
+          <p class="mt-2 text-black/70">Entrada y estacionamiento accesibles.</p>
+          <Redes {...redes} negocio="Alfa Gym" nota="Instagram lleva a la cuenta que figura en su vidriera; Facebook y YouTube son de ejemplo." class="mt-8" />
+        </div>
+        <iframe title="Mapa de Alfa Gym" class="h-64 w-full rounded-2xl border-0" loading="lazy" src={`https://www.google.com/maps?q=${ubicacion.lat},${ubicacion.lng}&z=16&output=embed`}></iframe>
+      </div>
+    </section>
+  </div>
+
+  <div id="visor" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/90 p-4" role="dialog" aria-modal="true" aria-label="Foto ampliada">
+    <img id="visor-img" alt="" class="max-h-full max-w-full rounded-xl object-contain" />
+    <button type="button" data-cerrar class="absolute top-4 right-4 h-11 w-11 rounded-full bg-white/15 text-2xl text-white hover:bg-white/25" aria-label="Cerrar">×</button>
+    <button type="button" data-paso="-1" class="absolute top-1/2 left-3 h-11 w-11 -translate-y-1/2 rounded-full bg-white/15 text-2xl text-white hover:bg-white/25" aria-label="Foto anterior">‹</button>
+    <button type="button" data-paso="1" class="absolute top-1/2 right-3 h-11 w-11 -translate-y-1/2 rounded-full bg-white/15 text-2xl text-white hover:bg-white/25" aria-label="Foto siguiente">›</button>
+  </div>
+</Base>
+
+<script is:inline>
+  // Visor de fotos: se abre al tocar una foto de la galería y se recorre con las flechas.
+  const botones = [...document.querySelectorAll("[data-foto]")];
+  const visor = document.getElementById("visor");
+  const img = document.getElementById("visor-img");
+  let actual = 0;
+  const mostrar = (i) => {
+    actual = (i + botones.length) % botones.length;
+    const original = botones[actual].querySelector("img");
+    if (!original) return;
+    img.src = original.src.replace(/w=\d+/, "w=1800");
+    img.alt = original.alt;
+  };
+  const abrir = (i) => {
+    mostrar(i);
+    visor.classList.remove("hidden");
+    visor.classList.add("flex");
+  };
+  const cerrar = () => {
+    visor.classList.add("hidden");
+    visor.classList.remove("flex");
+  };
+  botones.forEach((b, i) => b.addEventListener("click", () => abrir(i)));
+  visor.addEventListener("click", (e) => {
+    const paso = e.target.closest("[data-paso]");
+    if (paso) return mostrar(actual + Number(paso.dataset.paso));
+    if (e.target === visor || e.target.closest("[data-cerrar]")) cerrar();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (visor.classList.contains("hidden")) return;
+    if (e.key === "Escape") cerrar();
+    if (e.key === "ArrowRight") mostrar(actual + 1);
+    if (e.key === "ArrowLeft") mostrar(actual - 1);
+  });
+</script>
