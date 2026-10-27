@@ -1,0 +1,123 @@
+---
+import Base from "../../layouts/Base.astro";
+import PropuestaBar from "../../components/PropuestaBar.astro";
+import Catalogo from "../../components/Catalogo.astro";
+import ReservaTurno from "../../components/ReservaTurno.astro";
+import Horarios from "../../components/Horarios.astro";
+import Foto from "../../components/Foto.astro";
+import Redes from "../../components/Redes.astro";
+import { waLink } from "../../config";
+import { F } from "../../fotos";
+
+// Redes del comercio: pegá el link completo de cada una. Si queda vacía, el ícono se muestra de ejemplo.
+const redes = { instagram: "", facebook: "", youtube: "" };
+
+// De su ficha de Google: rubro (taller de bicicletas), dirección, horario del martes y la foto del local (subida por el dueño).
+// Productos, precios, servicios del taller, el resto de los horarios y las demás fotos son de ejemplo.
+const productos = [
+  { nombre: "Mountain bike rodado 29", categoria: "Bicis", precio: 650000, img: F.biciMtb },
+  { nombre: "Mountain bike rodado 27,5", categoria: "Bicis", precio: 520000, img: F.biciMtbRoja },
+  { nombre: "Bici de ruta", categoria: "Bicis", nota: "Consultá talles y modelos", img: F.biciRuta },
+  { nombre: "Bici urbana de paseo", categoria: "Bicis", precio: 380000, img: F.biciPaseo },
+  { nombre: "Rueda armada rodado 29", categoria: "Repuestos", precio: 95000, img: F.ruedaBici },
+  { nombre: "Grupo de cambios 1x12", categoria: "Repuestos", nota: "Consultá marcas", img: F.cambiosBici },
+  { nombre: "Casco ventilado", categoria: "Accesorios", precio: 45000, img: F.casco },
+];
+
+const servicios = [
+  { id: "service", nombre: "Service completo", duracion: 60, precio: 25000 },
+  { id: "regulacion", nombre: "Regulación de cambios y frenos", duracion: 30, precio: 10000 },
+  { id: "camara", nombre: "Cambio de cámara o parche", duracion: 15, precio: 4000 },
+  { id: "rueda", nombre: "Centrado de rueda", duracion: 30, precio: 8000 },
+  { id: "armado", nombre: "Armado de bici nueva", duracion: 90, precio: 20000 },
+];
+const turnos = ["09:00", "10:00", "11:00", "12:00", "16:30", "17:30", "18:30", "19:30"];
+
+const horarios: [string, string][][] = [
+  [],
+  [["09:00", "13:00"], ["16:30", "20:00"]],
+  [["09:00", "13:00"], ["16:30", "20:00"]],
+  [["09:00", "13:00"], ["16:30", "20:00"]],
+  [["09:00", "13:00"], ["16:30", "20:00"]],
+  [["09:00", "13:00"], ["16:30", "20:00"]],
+  [["09:00", "13:00"]],
+];
+---
+
+<Base title="Chochi bike | Bicicletería y taller en Toay (propuesta)" description="Propuesta de sitio web para Chochi bike: bicis, repuestos, turnos para el taller y consultas por WhatsApp." noindex>
+  <PropuestaBar negocio="Chochi bike" />
+
+  <div class="bg-[#f6f7f9] text-[#1b2430]" style="--accent:#e4572e;--accent-dark:#1b2430;--soft:#eceff3">
+    <header class="relative overflow-hidden bg-[#1b2430] text-white">
+      <div class="absolute -bottom-32 -left-24 h-80 w-80 rounded-full border-[28px] border-(--accent) opacity-30"></div>
+      <div class="absolute -top-20 right-1/3 h-56 w-56 rounded-full border-[20px] border-white/10"></div>
+      <div class="relative mx-auto grid max-w-5xl items-center gap-10 px-4 py-14 md:grid-cols-[1.2fr_1fr] md:py-20">
+        <div>
+          <p class="text-sm font-semibold tracking-widest text-(--accent) uppercase">Bicicletería y taller · Toay</p>
+          <h1 class="font-display mt-2 text-6xl font-bold md:text-7xl">Chochi bike</h1>
+          <p class="mt-4 max-w-md text-white/80">Bicis, repuestos y taller en Toay. Mirá lo que hay, consultá por WhatsApp y sacá turno para el service sin esperar.</p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <a href="#taller" class="btn bg-(--accent) text-white hover:brightness-110">Sacar turno para el taller</a>
+            <a href="#catalogo" class="btn border border-white/40 text-white hover:bg-white/10">Ver bicis y repuestos</a>
+          </div>
+        </div>
+        <div class="mx-auto aspect-[3/4] w-full max-w-xs overflow-hidden rounded-3xl bg-white/10 shadow-2xl ring-1 ring-white/15">
+          <Foto src="/propuestas/chochi-bike/interior.jpg" alt="El local de Chochi bike, con bicis de montaña y la pared de repuestos" eager class="h-full w-full object-cover" />
+        </div>
+      </div>
+    </header>
+
+    <p class="mx-auto max-w-5xl px-4 pt-6 text-sm text-black/55">La foto del local, el rubro, la dirección y el horario del martes son de su ficha de Google. Productos, precios, servicios y las demás fotos son de ejemplo.</p>
+
+    <section id="catalogo" class="mx-auto max-w-5xl scroll-mt-16 px-4 py-12">
+      <h2 class="font-display text-3xl font-bold">Bicis, repuestos y accesorios</h2>
+      <p class="mt-1 text-black/60">Buscá lo que necesitás y consultá stock por WhatsApp.</p>
+      <div class="mt-6">
+        <Catalogo productos={productos} prefijo="[PROPUESTA]" />
+      </div>
+    </section>
+
+    <section id="taller" class="scroll-mt-16 bg-[#1b2430] text-white">
+      <div class="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-4 py-14 md:grid-cols-[1fr_1.3fr]">
+        <div>
+          <h2 class="font-display text-3xl font-bold">Taller</h2>
+          <p class="mt-3 text-white/75">Elegí el arreglo, el día y la hora, y te confirmamos por WhatsApp. Sin hacer fila ni esperar respuesta.</p>
+          <div class="mt-6 grid grid-cols-2 gap-3">
+            <div class="col-span-2 aspect-[16/9] overflow-hidden rounded-2xl bg-white/10">
+              <Foto src={F.tallerBici} alt="Arreglo de una bici en el taller" ancho={800} class="h-full w-full object-cover" />
+            </div>
+            <div class="aspect-square overflow-hidden rounded-2xl bg-white/10">
+              <Foto src={F.herramientas} alt="Herramientas del taller" ancho={500} class="h-full w-full object-cover" />
+            </div>
+            <div class="aspect-square overflow-hidden rounded-2xl bg-white/10">
+              <Foto src={F.cambiosBici} alt="Grupo de cambios" ancho={500} class="h-full w-full object-cover" />
+            </div>
+          </div>
+        </div>
+        <div class="min-w-0 rounded-3xl bg-white p-6 text-[#1b2430] md:p-8">
+          <h3 class="font-display text-2xl font-bold">Sacá tu turno</h3>
+          <div class="mt-6">
+            <ReservaTurno servicios={servicios} horarios={turnos} diasCerrados={[0]} negocio="Chochi bike" prefijo="[PROPUESTA]" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto grid max-w-5xl gap-10 px-4 py-14 md:grid-cols-2">
+      <div>
+        <h2 class="font-display text-3xl font-bold">Horarios</h2>
+        <div class="mt-6 rounded-2xl bg-white p-5 ring-1 ring-black/10">
+          <Horarios horarios={horarios} />
+        </div>
+        <p class="mt-3 text-sm text-black/55">En su ficha de Google figura el martes de 9 a 13 y de 16:30 a 20 h; los demás días son de ejemplo.</p>
+      </div>
+      <div>
+        <h2 class="font-display text-3xl font-bold">Dónde estamos</h2>
+        <p class="mt-3 text-black/70">Av. 13 de Caballería, este 1243, Toay, La Pampa.</p>
+        <a href={waLink("[PROPUESTA] Hola, quería hacer una consulta.")} target="_blank" rel="noopener" class="btn-wa mt-5">Consultar por WhatsApp</a>
+        <iframe title="Mapa de Chochi bike" class="mt-6 h-56 w-full rounded-2xl border-0" loading="lazy" src="https://www.google.com/maps?q=8JCF%2BWW+Toay,+La+Pampa&z=16&output=embed"></iframe>
+        <Redes {...redes} negocio="Chochi bike" nota="Íconos de ejemplo: en el sitio real llevan a sus redes." class="mt-8" />
+      </div>
+    </section>
+  </div>
+</Base>

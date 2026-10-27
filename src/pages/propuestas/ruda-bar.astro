@@ -1,0 +1,142 @@
+---
+import Base from "../../layouts/Base.astro";
+import PropuestaBar from "../../components/PropuestaBar.astro";
+import ReservaMesa from "../../components/ReservaMesa.astro";
+import Horarios from "../../components/Horarios.astro";
+import Foto from "../../components/Foto.astro";
+import Galeria from "../../components/Galeria.astro";
+import Redes from "../../components/Redes.astro";
+import { F } from "../../fotos";
+
+// Redes del comercio: pegá el link completo de cada una. Si queda vacía, el ícono se muestra de ejemplo.
+const redes = { instagram: "", facebook: "", youtube: "" };
+
+// De su ficha de Google: rubro (bar), dirección, calificación y la foto de la barra (subida por un cliente).
+// La ficha no tiene horarios ni teléfono: carta, precios, agenda, horarios y las demás fotos son de ejemplo.
+const carta = [
+  { categoria: "Cervezas", img: F.cerveza, items: [["Pinta rubia", 4500], ["Pinta roja", 4800], ["Pinta IPA", 5200], ["Lata importada", 5500]] },
+  { categoria: "Tragos", img: F.ginTonic, items: [["Gin tonic", 6500], ["Fernet con cola", 5500], ["Negroni", 7000], ["Trago de autor", 7500]] },
+  { categoria: "Para picar", img: F.picada, items: [["Papas con cheddar y panceta", 7500], ["Hamburguesa RUDA con papas", 11000], ["Picada para dos", 16000], ["Nachos con guacamole", 8000]] },
+] as const;
+
+const agenda = [
+  { dia: "Jueves", titulo: "After office", texto: "2x1 en pintas de 19 a 21 h.", img: F.amigosBar },
+  { dia: "Viernes", titulo: "Música en vivo", texto: "Bandas de la zona desde las 23 h.", img: F.musicaEnVivo },
+  { dia: "Sábado", titulo: "DJ hasta el cierre", texto: "La barra abierta y la música fuerte.", img: F.neonMusica },
+];
+
+const galeria = [
+  { src: F.barBanquetas, alt: "Banquetas en la barra" },
+  { src: F.bartender, alt: "Preparando tragos" },
+  { src: F.tragoAutor, alt: "Trago de autor" },
+  { src: F.papasCheddar, alt: "Papas con cheddar" },
+  { src: F.fernet, alt: "Fernet con cola" },
+];
+
+const turnos = [{ nombre: "Noche", horas: ["20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00"], dias: [3, 4, 5, 6] }];
+
+const horarios: [string, string][][] = [[], [], [], [["20:00", "02:00"]], [["19:00", "02:00"]], [["20:00", "04:00"]], [["20:00", "04:00"]]];
+const fmt = (n: number) => n.toLocaleString("es-AR");
+---
+
+<Base title="RUDA Bar | Santa Rosa (propuesta)" description="Propuesta de sitio web para RUDA Bar: carta, agenda de la semana y reservas de mesa por WhatsApp." noindex>
+  <PropuestaBar negocio="RUDA Bar" />
+
+  <div class="bg-[#120f1a] text-[#f3eefc]" style="--accent:#b06cff;--accent-dark:#6d28d9;--soft:#ede4fb">
+    <header class="relative overflow-hidden">
+      <div class="absolute -top-40 -left-32 h-96 w-96 rounded-full bg-(--accent) opacity-25 blur-3xl"></div>
+      <div class="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-[#facc15] opacity-15 blur-3xl"></div>
+      <div class="relative mx-auto grid max-w-5xl items-center gap-10 px-4 py-14 md:grid-cols-[1.2fr_1fr] md:py-20">
+        <div>
+          <p class="text-sm font-semibold tracking-widest text-[#facc15] uppercase">Bar · Santa Rosa</p>
+          <h1 class="mt-2 text-8xl font-black tracking-tight text-white [text-shadow:0_0_24px_#b06cff,0_0_48px_#b06cff99] md:text-9xl">RUDA</h1>
+          <p class="mt-4 max-w-md text-lg text-white/80">Cervezas, tragos y algo para picar en pleno centro. Pasá por la barra o reservá tu mesa.</p>
+          <div class="mt-7 flex flex-wrap items-center gap-3">
+            <a href="#reservar" class="btn bg-(--accent) text-white hover:brightness-110">Reservar mesa</a>
+            <a href="#carta" class="btn border border-white/30 text-white hover:bg-white/10">Ver la carta</a>
+            <span class="rounded-full bg-white/10 px-3 py-1.5 text-sm">★ 4,4 en Google</span>
+          </div>
+        </div>
+        <div class="mx-auto aspect-[3/4] w-full max-w-xs overflow-hidden rounded-3xl bg-white/10 shadow-[0_0_60px_#b06cff55] ring-1 ring-white/15">
+          <Foto src="/propuestas/ruda-bar/barra-cervezas.jpg" alt="La barra de RUDA con dos pintas y el avión amarillo colgado del techo" eager class="h-full w-full object-cover" />
+        </div>
+      </div>
+    </header>
+
+    <section id="carta" class="mx-auto max-w-5xl scroll-mt-16 px-4 py-14">
+      <h2 class="text-3xl font-black">La carta</h2>
+      <p class="mt-1 text-sm text-white/55">Carta y precios de ejemplo. En el sitio real va la de RUDA, y la cambian ustedes desde un panel.</p>
+      <div class="mt-8 grid gap-4 md:grid-cols-3">
+        {carta.map((c) => (
+          <div class="overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/10">
+            <div class="aspect-[16/10] bg-white/10">
+              <Foto src={c.img} alt={c.categoria} ancho={700} class="h-full w-full object-cover" />
+            </div>
+            <div class="p-5">
+              <h3 class="text-xl font-bold text-(--accent)">{c.categoria}</h3>
+              <ul class="mt-3 space-y-2 text-sm">
+                {c.items.map(([plato, precio]) => (
+                  <li class="flex items-baseline gap-2">
+                    <span>{plato}</span>
+                    <span class="flex-1 border-b border-dotted border-white/25"></span>
+                    <span class="font-semibold">${fmt(precio)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-5xl px-4 pb-14">
+      <h2 class="text-3xl font-black">Esta semana</h2>
+      <p class="mt-1 text-sm text-white/55">Agenda de ejemplo: la cargan ustedes cada semana.</p>
+      <div class="mt-8 grid gap-4 md:grid-cols-3">
+        {agenda.map((a) => (
+          <div class="relative flex h-60 items-end overflow-hidden rounded-2xl bg-white/10 p-5">
+            <Foto src={a.img} alt="" ancho={700} class="absolute inset-0 h-full w-full object-cover opacity-60" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#120f1a] via-[#120f1a]/60 to-transparent"></div>
+            <div class="relative">
+              <p class="text-xs font-bold tracking-widest text-[#facc15] uppercase">{a.dia}</p>
+              <h3 class="mt-1 text-xl font-bold">{a.titulo}</h3>
+              <p class="mt-1 text-sm text-white/75">{a.texto}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-5xl px-4 pb-14">
+      <h2 class="text-3xl font-black">El bar</h2>
+      <div class="mt-8 [&_figure]:bg-white/10 [&_p]:text-white/55">
+        <Galeria fotos={galeria} nota="Fotos de ejemplo. La de la barra, arriba, es de su ficha de Google (la subió un cliente)." />
+      </div>
+    </section>
+
+    <section id="reservar" class="mx-auto max-w-3xl scroll-mt-16 px-4 pb-14">
+      <div class="rounded-3xl bg-white p-6 text-[#120f1a] md:p-8">
+        <h2 class="text-2xl font-black">Reservá tu mesa</h2>
+        <p class="mt-1 text-sm text-black/60">Te confirmamos por WhatsApp.</p>
+        <div class="mt-6">
+          <ReservaMesa turnos={turnos} negocio="RUDA Bar" prefijo="[PROPUESTA]" />
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-[#1a1524]">
+      <div class="mx-auto grid max-w-5xl gap-10 px-4 py-14 md:grid-cols-2">
+        <div>
+          <h2 class="text-3xl font-black">Dónde estamos</h2>
+          <p class="mt-3 text-white/75">9 de Julio 150, Santa Rosa, La Pampa.</p>
+          <div class="mt-6 rounded-2xl bg-white p-5 text-[#120f1a]">
+            <Horarios horarios={horarios} />
+          </div>
+          <p class="mt-3 text-sm text-white/55">Horarios de ejemplo: su ficha de Google no tiene horarios cargados.</p>
+          <Redes {...redes} negocio="RUDA Bar" nota="Íconos de ejemplo: en el sitio real llevan a sus redes." class="mt-8" />
+        </div>
+        <iframe title="Mapa de RUDA Bar" class="h-80 w-full rounded-2xl border-0" loading="lazy" src="https://www.google.com/maps?q=9+de+Julio+150,+Santa+Rosa,+La+Pampa&z=16&output=embed"></iframe>
+      </div>
+    </section>
+  </div>
+</Base>

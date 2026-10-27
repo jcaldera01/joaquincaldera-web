@@ -128,6 +128,27 @@ export const F = {
   camioneta: "photo-1778539243206-61b0d8c234e5",
   cazador: "photo-1677939470005-e3266a845311",
 
+  // Bicicletería
+  biciRuta: "photo-1532298229144-0ec0c57515c7",
+  biciMtb: "photo-1511994298241-608e28f14fde",
+  biciMtbRoja: "photo-1673121414328-52eff37bc6d0",
+  biciPaseo: "photo-1601067095185-b8b73ad7db10",
+  biciCampo: "photo-1621122940876-2b3be129159c",
+  bicisExhibidas: "photo-1561840884-9dda41ed54e4",
+  tallerBici: "photo-1675798227643-da319f8ee8f7",
+  herramientas: "photo-1760310936486-4dd450aab2a8",
+  cambiosBici: "photo-1562615193-cbeef074a501",
+  casco: "photo-1701522814490-9d67fe9ab5b7",
+  ruedaBici: "photo-1607109181641-74f8e7f4eb11",
+
+  // Bar
+  barBanquetas: "photo-1739799120521-c5f44a9335a3",
+  bartender: "photo-1763771757330-3212b518e31c",
+  musicaEnVivo: "photo-1718182147550-5d6f9208432d",
+  amigosBar: "photo-1675419092955-3dfff1351e01",
+  neonMusica: "photo-1568581595119-c6ebbf5c75c0",
+  picada: "photo-1773754109448-13d2af138059",
+
   // Comercios en general
   duenoCelular: "photo-1687422808248-f807f4ea2a2e",
   mostrador: "photo-1556742049-0cfed4f6a45d",
