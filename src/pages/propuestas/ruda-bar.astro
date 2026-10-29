@@ -6,18 +6,219 @@ import Horarios from "../../components/Horarios.astro";
 import Foto from "../../components/Foto.astro";
 import Galeria from "../../components/Galeria.astro";
 import Redes from "../../components/Redes.astro";
+import Carta from "../../components/Carta.astro";
 import { F } from "../../fotos";
 
 // Redes del comercio: pegá el link completo de cada una. Si queda vacía, el ícono se muestra de ejemplo.
 const redes = { instagram: "", facebook: "", youtube: "" };
 
 // De su ficha de Google: rubro (bar), dirección, calificación y la foto de la barra (subida por un cliente).
-// La ficha no tiene horarios ni teléfono: carta, precios, agenda, horarios y las demás fotos son de ejemplo.
+// La carta y los precios son los de su menú de mayo 2026 (PDF que pasó Joaquín).
+// La ficha no tiene horarios ni teléfono: agenda, horarios y las demás fotos son de ejemplo.
 const carta = [
-  { categoria: "Cervezas", img: F.cerveza, items: [["Pinta rubia", 4500], ["Pinta roja", 4800], ["Pinta IPA", 5200], ["Lata importada", 5500]] },
-  { categoria: "Tragos", img: F.ginTonic, items: [["Gin tonic", 6500], ["Fernet con cola", 5500], ["Negroni", 7000], ["Trago de autor", 7500]] },
-  { categoria: "Para picar", img: F.picada, items: [["Papas con cheddar y panceta", 7500], ["Hamburguesa RUDA con papas", 11000], ["Picada para dos", 16000], ["Nachos con guacamole", 8000]] },
-] as const;
+  {
+    nombre: "Picoteo",
+    grupo: "Para comer",
+    secciones: [{ items: [
+      { nombre: "Crocantes de pollo", detalle: "Con salsa de cuarto de libra", precio: 18000 },
+      { nombre: "Croquetas de acelga", detalle: "Con alioli y ajo ahumado", precio: 17000 },
+      { nombre: "Papas solas", precio: 10000 },
+      { nombre: "Papas cheddar, panceta y verdeo", precio: 14000 },
+      { nombre: "Bastones de muzza", precio: 18000 },
+      { nombre: "Rabas romanas", detalle: "Con alioli de pimientos rojos", precio: 25000 },
+      { nombre: "Langostinos rebozados", detalle: "Con mayonesa de palta", precio: 26000 },
+    ] }],
+  },
+  {
+    nombre: "Sandwiches",
+    secciones: [{ items: [
+      { nombre: "Bondiola braseada", detalle: "Con ajo, miel y jengibre, acompañada de rúcula, cebolla caramelizada, pimientos y papas al gajo", precio: 32000 },
+      { nombre: "Vegetariano", detalle: "Rúcula, tomate, queso a la romana, pesto de almendras, parmesano y albahaca", precio: 22000 },
+      { nombre: "Lomito", detalle: "Jamón, queso, lechuga, tomate y huevo", precio: 35000 },
+    ] }],
+  },
+  {
+    nombre: "Ensaladas",
+    secciones: [{ items: [
+      { nombre: "Ruda", detalle: "Rúcula, peras en almíbar, queso azul, nueces y croutones", precio: 17000 },
+      { nombre: "Caesar", precio: 20000 },
+    ] }],
+  },
+  {
+    nombre: "Pipshass",
+    secciones: [{ nota: "Tamaño grande", items: [
+      { nombre: "Muzza", precio: 27000 },
+      { nombre: "Cuatro soques", precio: 32000 },
+      { nombre: "Provolone", precio: 32000 },
+      { nombre: "Panceta y champiñones", precio: 32000 },
+      { nombre: "Napolitana", precio: 29000 },
+      { nombre: "Especial", precio: 29000 },
+      { nombre: "Palmitos", precio: 35000 },
+    ] }],
+  },
+  {
+    nombre: "Barra Ruda",
+    grupo: "Para tomar",
+    secciones: [{ items: [
+      { nombre: "Fernet Branca", precio: 10000 },
+      { nombre: "Gancia", precio: 10000 },
+      { nombre: "Gancia batido", precio: 10000 },
+      { nombre: "Garibaldi", precio: 10000 },
+      { nombre: "Aperol Spritz", precio: 10000 },
+      { nombre: "Cynar Julep", precio: 10000 },
+      { nombre: "Vermut", detalle: "Con tónica o soda", precio: 10000 },
+      { nombre: "Mojito", detalle: "Clásico, frutos rojos o maracuyá", precio: 10000 },
+      { nombre: "Caipirinha", detalle: "Clásica, frutos rojos o maracuyá", precio: 10000 },
+      { nombre: "Caipiroska", detalle: "Clásica, frutos rojos o maracuyá", precio: 10000 },
+      { nombre: "Malibú", precio: 10000 },
+      { nombre: "Cuba libre", precio: 10000 },
+      { nombre: "Jägermeister", detalle: "Con energizante", precio: 15000 },
+      { nombre: "Smirnoff", detalle: "Con energizante o jugo de naranja", precio: 10000 },
+      { nombre: "Sky", detalle: "Con energizante o jugo de naranja", precio: 10000 },
+      { nombre: "Absolut", detalle: "Con energizante o jugo de naranja", precio: 17000 },
+      { nombre: "Vodka Grey Goose", precio: 20000 },
+      { nombre: "Negroni", precio: 9000 },
+      { nombre: "Boulevardier", precio: 9000 },
+      { nombre: "Old Fashioned", precio: 11000 },
+      { nombre: "Baileys", precio: 8000 },
+    ] }],
+  },
+  {
+    nombre: "Coctelería de autor",
+    secciones: [{ items: [
+      { nombre: "Moscow Mule", precio: 10000 },
+      { nombre: "Mai Tai", precio: 10000 },
+      { nombre: "Tom Collins", precio: 10000 },
+      { nombre: "Penicilin", detalle: "Whisky escocés, jengibre, miel y syrup de lima", precio: 10000 },
+      { nombre: "Whisky Sour", precio: 10000 },
+      { nombre: "Gin Sour", precio: 10000 },
+      { nombre: "Travesía de Artemisa", detalle: "Jägermeister, Absolut Raspberry, frutilla, lima y menta", precio: 10000 },
+      { nombre: "Gancia", detalle: "Frutos rojos, naranja, almíbar y espumante", precio: 10000 },
+      { nombre: "Acapulco", detalle: "Con alcohol", precio: 10000 },
+      { nombre: "Clarita", precio: 10000 },
+      { nombre: "Note di Italia", precio: 10000 },
+    ] }],
+  },
+  {
+    nombre: "Gin & Tonic",
+    secciones: [{ items: [
+      { nombre: "Entre Perro y Lobo", precio: 8000 },
+      { nombre: "Aconcagua", precio: 10000 },
+      { nombre: "Aconcagua", detalle: "Lima o cardamomo", precio: 10000 },
+      { nombre: "Restinga", precio: 8000 },
+      { nombre: "Beefeater", precio: 15000 },
+      { nombre: "Beefeater Pink", precio: 15000 },
+      { nombre: "Beefeater 24", precio: 15000 },
+      { nombre: "Bombay", precio: 10000 },
+      { nombre: "Tanqueray", precio: 12000 },
+      { nombre: "Tanqueray Sevilla o Royal", precio: 12000 },
+      { nombre: "Malaria", precio: 12000 },
+      { nombre: "Malaria Black", precio: 12000 },
+      { nombre: "Malaria London Dry", precio: 12000 },
+      { nombre: "Broker's", precio: 10000 },
+      { nombre: "Bull Dog", precio: 18000 },
+      { nombre: "Hendrick's", precio: 16000 },
+    ] }],
+  },
+  {
+    nombre: "Whiskies",
+    secciones: [{ items: [
+      { nombre: "J&B", precio: 8000 },
+      { nombre: "Ballantine's", precio: 9000 },
+      { nombre: "Monkey Shoulder", precio: 9000 },
+      { nombre: "Jameson", precio: 10000 },
+      { nombre: "Jameson IPA", precio: 10000 },
+      { nombre: "Jim Beam", precio: 9000 },
+      { nombre: "Johnnie Walker Red Label", precio: 11000 },
+      { nombre: "Johnnie Walker Blonde", precio: 12000 },
+      { nombre: "Johnnie Walker Black Label", precio: 14000 },
+      { nombre: "Johnnie Walker Double Black Label", precio: 16000 },
+      { nombre: "Johnnie Walker Green", precio: 40000 },
+      { nombre: "Johnnie Walker Gold Reserva", precio: 43000 },
+      { nombre: "Johnnie Walker 18 años", precio: 46000 },
+      { nombre: "Johnnie Walker Blue Label", precio: 75000 },
+      { nombre: "Jack Daniel's", precio: 15000 },
+      { nombre: "Jack Daniel's Honey", precio: 16000 },
+      { nombre: "Jack Daniel's Apple", precio: 16000 },
+      { nombre: "Jack Daniel's Fire Red", precio: 16000 },
+      { nombre: "Jack Daniel's Gentleman", precio: 20000 },
+      { nombre: "Jack Daniel's Single Barrel", precio: 25000 },
+      { nombre: "Chivas Regal 12", precio: 17000 },
+      { nombre: "Chivas Regal Mizunara", precio: 23000 },
+      { nombre: "Chivas Regal 18", precio: 40000 },
+      { nombre: "Chivas Regal 21", precio: 57000 },
+      { nombre: "Buchanan's 12", precio: 23000 },
+      { nombre: "Buchanan's 18", precio: 34000 },
+    ] }],
+  },
+  {
+    nombre: "Tequilas",
+    secciones: [{ items: [
+      { nombre: "José Cuervo Silver", precio: 11000 },
+      { nombre: "José Cuervo Gold", precio: 10000 },
+    ] }],
+  },
+  {
+    nombre: "Cervezas",
+    secciones: [
+      { items: [
+        { nombre: "Budweiser", detalle: "Lata", precio: 6000 },
+        { nombre: "Stella Artois", precio: 14000 },
+        { nombre: "Patagonia 24.7", precio: 14000 },
+        { nombre: "Patagonia Amber", precio: 14000 },
+        { nombre: "Corona", detalle: "Porrón de 330 ml", precio: 9000 },
+        { nombre: "Corona sin alcohol", precio: 9000 },
+      ] },
+      { titulo: "Artesanales", columnas: ["Pinta", "Jarra"], items: [
+        { nombre: "Criolla", precio: [7000, 14000] },
+        { nombre: "Roja", precio: [7000, 14000] },
+        { nombre: "IPA", precio: [7000, 14000] },
+      ] },
+    ],
+  },
+  {
+    nombre: "Vinos y espumantes",
+    secciones: [
+      { titulo: "Vinos & espumantes", items: [
+        { nombre: "Cordero con Piel de Lobo", precio: 18000 },
+        { nombre: "Perro Callejero", precio: 23000 },
+        { nombre: "Desierto 25", precio: 34000 },
+        { nombre: "Las Perdices Pinot Noir", precio: 40000 },
+        { nombre: "Rutini Cabernet / Malbec", precio: 46000 },
+        { nombre: "Zuccardi Malbec", precio: 34000 },
+        { nombre: "Trumpeter", precio: 28000 },
+        { nombre: "Santa Julia Chenin", precio: 18000 },
+        { nombre: "Mumm", precio: 40000 },
+        { nombre: "Chandon", detalle: "Extra brut", precio: 52000 },
+        { nombre: "Baron B", detalle: "Extra brut", precio: 75000 },
+      ] },
+      { titulo: "Champagne", items: [
+        { nombre: "Moët & Chandon Brut Impérial", precio: 345000 },
+        { nombre: "Veuve Clicquot", precio: 437000 },
+        { nombre: "Dom Pérignon", precio: 900000 },
+      ] },
+    ],
+  },
+  {
+    nombre: "Sin alcohol",
+    secciones: [
+      { titulo: "Mocktails", items: [
+        { nombre: "Limonada", precio: 7000 },
+        { nombre: "Limonada (jarra)", precio: 11000 },
+        { nombre: "Pomelada", precio: 7000 },
+        { nombre: "Acapulco", detalle: "Naranja, ananá, frutos rojos o maracuyá", precio: 8000 },
+        { nombre: "Mojito Virgin", precio: 7000 },
+      ] },
+      { titulo: "Bebidas", items: [
+        { nombre: "Red Bull", precio: 6000 },
+        { nombre: "Speed", precio: 5000 },
+        { nombre: "Gaseosa", precio: 5000 },
+        { nombre: "Agua saborizada", precio: 5000 },
+        { nombre: "Agua con o sin gas", precio: 5000 },
+      ] },
+    ],
+  },
+];
 
 const agenda = [
   { dia: "Jueves", titulo: "After office", texto: "2x1 en pintas de 19 a 21 h.", img: F.amigosBar },
@@ -36,7 +237,6 @@ const galeria = [
 const turnos = [{ nombre: "Noche", horas: ["20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00"], dias: [3, 4, 5, 6] }];
 
 const horarios: [string, string][][] = [[], [], [], [["20:00", "02:00"]], [["19:00", "02:00"]], [["20:00", "04:00"]], [["20:00", "04:00"]]];
-const fmt = (n: number) => n.toLocaleString("es-AR");
 ---
 
 <Base title="RUDA Bar | Santa Rosa (propuesta)" description="Propuesta de sitio web para RUDA Bar: carta, agenda de la semana y reservas de mesa por WhatsApp." noindex>
@@ -65,27 +265,9 @@ const fmt = (n: number) => n.toLocaleString("es-AR");
 
     <section id="carta" class="mx-auto max-w-5xl scroll-mt-16 px-4 py-14">
       <h2 class="text-3xl font-black">La carta</h2>
-      <p class="mt-1 text-sm text-white/55">Carta y precios de ejemplo. En el sitio real va la de RUDA, y la cambian ustedes desde un panel.</p>
-      <div class="mt-8 grid gap-4 md:grid-cols-3">
-        {carta.map((c) => (
-          <div class="overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/10">
-            <div class="aspect-[16/10] bg-white/10">
-              <Foto src={c.img} alt={c.categoria} ancho={700} class="h-full w-full object-cover" />
-            </div>
-            <div class="p-5">
-              <h3 class="text-xl font-bold text-(--accent)">{c.categoria}</h3>
-              <ul class="mt-3 space-y-2 text-sm">
-                {c.items.map(([plato, precio]) => (
-                  <li class="flex items-baseline gap-2">
-                    <span>{plato}</span>
-                    <span class="flex-1 border-b border-dotted border-white/25"></span>
-                    <span class="font-semibold">${fmt(precio)}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        ))}
+      <p class="mt-1 text-sm text-white/55">La carta y los precios de RUDA, de su menú de mayo. En el sitio real la actualizan ustedes desde un panel.</p>
+      <div class="mt-6">
+        <Carta categorias={carta} fondoNav="bg-[#120f1a]/95" />
       </div>
     </section>
 

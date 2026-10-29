@@ -1,0 +1,118 @@
+---
+// Carta con una pestaña por categoría, para bares y restaurantes que no toman pedidos online.
+// Cada categoría puede tener varias secciones; una sección con `columnas` (p. ej. Pinta / Jarra) lleva un precio por columna.
+// Los colores salen de --accent y del color de texto del contenedor, así que sirve en fondos claros y oscuros.
+
+interface Item {
+  nombre: string;
+  detalle?: string;
+  precio?: number | number[];
+}
+
+interface Seccion {
+  titulo?: string;
+  nota?: string;
+  columnas?: string[];
+  items: Item[];
+}
+
+interface Categoria {
+  nombre: string;
+  grupo?: string;
+  secciones: Seccion[];
+}
+
+interface Props {
+  categorias: Categoria[];
+  // Fondo de la barra de pestañas, que queda fija arriba al bajar por la carta.
+  fondoNav?: string;
+}
+
+const { categorias, fondoNav = "bg-white/95" } = Astro.props;
+const fmt = (n: number) => `$${n.toLocaleString("es-AR")}`;
+const slug = (s: string) => s.toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+---
+
+<div data-carta class="scroll-mt-12">
+  <div class={`sticky top-9 z-30 -mx-4 px-4 py-3 backdrop-blur sm:top-10 ${fondoNav}`}>
+    <div role="tablist" aria-label="Categorías de la carta" class="flex gap-2 overflow-x-auto [scrollbar-width:none] md:flex-wrap">
+      {categorias.map((c, i) => (
+        <>
+          {c.grupo && <span class="shrink-0 self-center pr-1 pl-2 text-xs font-semibold tracking-widest uppercase opacity-50 first:pl-0">{c.grupo}</span>}
+          <button
+            type="button"
+            role="tab"
+            id={`tab-${slug(c.nombre)}`}
+            aria-controls={`panel-${slug(c.nombre)}`}
+            aria-selected={i === 0 ? "true" : "false"}
+            tabindex={i === 0 ? 0 : -1}
+            class="shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold ring-1 ring-current/20 transition aria-selected:bg-(--accent) aria-selected:text-white aria-selected:ring-(--accent)"
+          >{c.nombre}</button>
+        </>
+      ))}
+    </div>
+  </div>
+
+  {categorias.map((c, i) => (
+    <div role="tabpanel" id={`panel-${slug(c.nombre)}`} aria-labelledby={`tab-${slug(c.nombre)}`} hidden={i !== 0} class="pt-4">
+      {c.secciones.map((s) => (
+        <section class="mt-6 first:mt-2">
+          <div class="flex items-end justify-between gap-4">
+            <div>
+              <h3 class="text-2xl font-black">{s.titulo ?? c.nombre}</h3>
+              {s.nota && <p class="mt-0.5 text-sm opacity-60">{s.nota}</p>}
+            </div>
+            {s.columnas && (
+              <div class="flex shrink-0 text-xs font-bold tracking-widest uppercase opacity-60">
+                {s.columnas.map((col) => <span class="w-20 text-right sm:w-24">{col}</span>)}
+              </div>
+            )}
+          </div>
+          <ul class={`mt-4 gap-x-12 ${s.items.length > 8 ? "md:columns-2" : "md:max-w-2xl"}`}>
+            {s.items.map((it) => (
+              <li class="break-inside-avoid border-b border-current/10 py-2.5">
+                <div class="flex items-baseline gap-3">
+                  <span class="font-semibold">{it.nombre}</span>
+                  <span class="flex-1"></span>
+                  {Array.isArray(it.precio)
+                    ? it.precio.map((p) => <span class="w-20 shrink-0 text-right font-semibold tabular-nums sm:w-24">{fmt(p)}</span>)
+                    : it.precio !== undefined && <span class="shrink-0 font-semibold tabular-nums">{fmt(it.precio)}</span>}
+                </div>
+                {it.detalle && <p class="mt-0.5 text-sm opacity-65">{it.detalle}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  ))}
+</div>
+
+<script is:inline>
+  // Pestañas de la carta: muestra un panel por vez y se recorre con las flechas del teclado.
+  document.querySelectorAll("[data-carta]:not([data-listo])").forEach((carta) => {
+    carta.dataset.listo = "";
+    const tabs = [...carta.querySelectorAll("[role=tab]")];
+    const elegir = (tab) => {
+      tabs.forEach((t) => {
+        const activa = t === tab;
+        t.setAttribute("aria-selected", String(activa));
+        t.tabIndex = activa ? 0 : -1;
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !activa;
+      });
+      const fila = tab.parentElement;
+      fila.scrollBy({ left: tab.getBoundingClientRect().left - fila.getBoundingClientRect().left - (fila.clientWidth - tab.clientWidth) / 2, behavior: "smooth" });
+      if (carta.getBoundingClientRect().top < 0) carta.scrollIntoView({ block: "start" });
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => elegir(t));
+      t.addEventListener("keydown", (e) => {
+        const paso = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+        if (!paso) return;
+        const otra = tabs[(i + paso + tabs.length) % tabs.length];
+        otra.focus();
+        elegir(otra);
+      });
+    });
+  });
+</script>
